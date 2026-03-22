@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Office Matrix</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-archive-line"></i>
+            <span>ClassTrack<strong>Office</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#" onclick="switchView('dashboard', this)"><i class="ri-folders-line"></i> Registry</a></li>
+            <li><a href="#" onclick="switchView('enrollment', this)"><i class="ri-user-settings-line"></i> Enrollment</a></li>
+            <li><a href="#" onclick="switchView('documents', this)"><i class="ri-file-paper-line"></i> Documents</a></li>
+            <li><a href="#" onclick="switchView('academic-cal', this)"><i class="ri-calendar-line"></i> Academic Cal</a></li>
+            <li><a href="#" onclick="switchView('profile', this)"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="#" onclick="switchView('settings', this)"><i class="ri-settings-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Administration Office Portal</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=Office&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span class="name">Office Executive</span>
+                        <span class="reg">Administrative Node</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="view-dashboard" class="admin-view active" style="padding: 2rem 3rem;">
+            <div class="action-header" style="padding: 24px; border-radius: var(--radius-md); margin-bottom: 24px;">
+                <h1 class="page-title">Attendance Notifications</h1>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-mail-send-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Notifications Sent</h3>
+                        <p class="stat-value">1,240</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-chat-voice-line" style="color: var(--accent-primary);"></i></div>
+                    <div class="stat-info">
+                        <h3>Low Attendance</h3>
+                        <p class="stat-value">158 Active</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-file-list-3-line" style="color: var(--success);"></i></div>
+                    <div class="stat-info">
+                        <h3>Reports Generated</h3>
+                        <p class="stat-value">99%</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attendance-section" style="margin-top: 24px;">
+                <div class="section-header">
+                    <h2>Waiting List for Warnings</h2>
+                </div>
+                <div class="table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Student ID</th>
+                                <th>Risk Probability</th>
+                                <th>Notification Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>20CS05</td>
+                                <td><span style="color: var(--danger);">Below 75%</span></td>
+                                <td><span class="grid-badge badge-present">SENT</span></td>
+                                <td><button class="btn-primary" style="padding: 5px 10px; font-size: 0.75rem;">View</button></td>
+                            </tr>
+                            <tr>
+                                <td>20CS12</td>
+                                <td><span style="color: var(--warning);">Near 75%</span></td>
+                                <td><span class="grid-badge badge-absent">QUEUED</span></td>
+                                <td><button class="btn-primary" style="padding: 5px 10px; font-size: 0.75rem;">Send Now</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    
+            <section id="view-enrollment" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                    <h1 class="page-title">Active Enrollments</h1>
+                    <button class="btn-primary" style="padding: 8px 16px;"><i class="ri-user-add-line"></i> New Enrollment</button>
+                </div>
+                <div class="card">
+                    <div class="toolbar" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between;">
+                        <input type="text" placeholder="Search by Roll No or Name..." style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px; width: 300px;">
+                        <select style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 10px; border-radius: 6px;">
+                            <option value="">All Batches</option>
+                            <option value="2023">Batch 2023</option>
+                            <option value="2024">Batch 2024</option>
+                            <option value="2025">Batch 2025</option>
+                        </select>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Roll Number</th>
+                                <th>Student Name</th>
+                                <th>Course</th>
+                                <th>Batch</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>20CS05</td>
+                                <td>Michael Johnson</td>
+                                <td>BA Multimedia</td>
+                                <td>2024-2027</td>
+                                <td><span class="grid-badge badge-present">Enrolled</span></td>
+                            </tr>
+                            <tr>
+                                <td>20CS12</td>
+                                <td>Sarah Williams</td>
+                                <td>BA Animation</td>
+                                <td>2024-2027</td>
+                                <td><span class="grid-badge badge-present">Enrolled</span></td>
+                            </tr>
+                            <tr>
+                                <td>19FD01</td>
+                                <td>Emma Davis</td>
+                                <td>BSC Fashion</td>
+                                <td>2023-2026</td>
+                                <td><span class="grid-badge badge-absent" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">Pending Fees</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-documents" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Document Requests</h1>
+                </div>
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Request ID</th>
+                                <th>Student Name</th>
+                                <th>Document Type</th>
+                                <th>Requested On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#REQ-0012</td>
+                                <td>Michael Johnson</td>
+                                <td>Bonafide Certificate</td>
+                                <td>Oct 15, 2026</td>
+                                <td>
+                                    <button class="btn-primary" style="padding: 5px 10px; font-size: 0.75rem; margin-right: 5px;">Approve & Generate</button>
+                                    <button class="btn-secondary" style="padding: 5px 10px; font-size: 0.75rem; color: var(--danger); border-color: rgba(239, 68, 68, 0.3);">Reject</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#REQ-0013</td>
+                                <td>Sarah Williams</td>
+                                <td>Transcript</td>
+                                <td>Oct 16, 2026</td>
+                                <td>
+                                    <button class="btn-primary" style="padding: 5px 10px; font-size: 0.75rem; margin-right: 5px;">Approve & Generate</button>
+                                    <button class="btn-secondary" style="padding: 5px 10px; font-size: 0.75rem; color: var(--danger); border-color: rgba(239, 68, 68, 0.3);">Reject</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-academic-cal" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                    <h1 class="page-title">Academic Calendar</h1>
+                    <button class="btn-primary" style="padding: 8px 16px;"><i class="ri-add-line"></i> Add Event</button>
+                </div>
+                <div class="card">
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1rem;">
+                        <li style="display: flex; gap: 1.5rem; justify-content: flex-start; align-items: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; border-left: 4px solid var(--accent-primary);">
+                            <div style="text-align: center; min-width: 60px;">
+                                <div style="font-size: 0.8rem; color: var(--accent-primary); font-weight: 700; text-transform: uppercase;">Nov</div>
+                                <div style="font-size: 1.5rem; font-weight: 700;">15</div>
+                            </div>
+                            <div>
+                                <h4 style="margin: 0 0 5px 0;">Mid-Semester Examinations</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Consolidated exams for all UG and PG batches.</span>
+                            </div>
+                        </li>
+                        <li style="display: flex; gap: 1.5rem; justify-content: flex-start; align-items: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; border-left: 4px solid var(--success);">
+                            <div style="text-align: center; min-width: 60px;">
+                                <div style="font-size: 0.8rem; color: var(--success); font-weight: 700; text-transform: uppercase;">Dec</div>
+                                <div style="font-size: 1.5rem; font-weight: 700;">22</div>
+                            </div>
+                            <div>
+                                <h4 style="margin: 0 0 5px 0;">Winter Break Begins</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Campus closed for winter holidays.</span>
+                            </div>
+                        </li>
+                        <li style="display: flex; gap: 1.5rem; justify-content: flex-start; align-items: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px; border-left: 4px solid var(--warning);">
+                            <div style="text-align: center; min-width: 60px;">
+                                <div style="font-size: 0.8rem; color: var(--warning); font-weight: 700; text-transform: uppercase;">Jan</div>
+                                <div style="font-size: 1.5rem; font-weight: 700;">05</div>
+                            </div>
+                            <div>
+                                <h4 style="margin: 0 0 5px 0;">Spring Semester Registration</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Deadline for fee payment and registration.</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="view-profile" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Executive Profile</h1>
+                </div>
+                <div class="card" style="display: flex; gap: 2rem; align-items: flex-start;">
+                    <img src="https://ui-avatars.com/api/?name=Office&background=ff6b00&color=fff&size=150" alt="Profile" style="border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="flex: 1;">
+                        <h2 style="margin-bottom: 5px;">Registry Node 1</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Office Executive</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 5px;">Node ID</label>
+                                <div style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px;">OFC-SYS-01</div>
+                            </div>
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 5px;">Associated Email</label>
+                                <div style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px;">registry@classtrack.edu</div>
+                            </div>
+                        </div>
+                        <button class="btn-primary"><i class="ri-edit-line"></i> Update Node Data</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-settings" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">System Settings</h1>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Automated Tasks</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                        <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                            <span>Auto-dispatch low attendance warnings</span>
+                            <input type="checkbox" checked style="width: 20px; height: 20px;">
+                        </label>
+                        <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                            <span>Daily data backup to secure vault</span>
+                            <input type="checkbox" checked style="width: 20px; height: 20px;">
+                        </label>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Security Settings</h3>
+                    <button class="btn-secondary"><i class="ri-lock-password-line"></i> Manage Registry Password</button>
+                </div>
+            </section>
+    </main>
+    </div>
+    <footer class="site-footer">
+        &copy; <span id="currentYear"></span> ClassTrack Office Panel. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('currentYear').innerText = new Date().getFullYear();
+    </script>
+
+    <style>
+        .admin-view { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .admin-view.active { display: block; }
+    </style>
+    <script>
+        function switchView(viewId, element) {
+            document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            
+            if(element) {
+                document.querySelectorAll('.sidebar .nav-links li').forEach(li => li.classList.remove('active'));
+                element.parentElement.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

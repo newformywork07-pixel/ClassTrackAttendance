@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Student Timetable</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .timetable-grid {
+            display: grid;
+            grid-template-columns: 100px repeat(5, 1fr);
+            gap: 12px;
+            margin-top: 24px;
+        }
+        .tt-header {
+            background: rgba(255,255,255,0.05);
+            padding: 16px;
+            text-align: center;
+            font-weight: 600;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+        }
+        .tt-time {
+            background: rgba(255,255,255,0.02);
+            padding: 16px;
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tt-slot {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 16px;
+            border-radius: var(--radius-sm);
+            text-align: center;
+            transition: var(--transition-fast);
+        }
+        .tt-slot:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        .tt-slot h4 { margin-bottom: 4px; font-size: 0.95rem; }
+        .tt-slot p { font-size: 0.8rem; color: var(--text-secondary); }
+        .tt-slot.empty { opacity: 0.3; border-style: dashed; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-user-heart-fill"></i>
+            <span>ClassTrack<strong>Student</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="student.html"><i class="ri-dashboard-line"></i> Overview</a></li>
+            <li><a href="student_attendance.html"><i class="ri-calendar-check-line"></i> My Attendance</a></li>
+            <li><a href="student_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Report</a></li>
+            <li class="active"><a href="student_timetable.html"><i class="ri-book-read-line"></i> Class Timetable</a></li>
+            <li><a href="student_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="student_settings.html"><i class="ri-settings-4-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Academic Schedule</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Student Name</span>
+                        <span id="userReg" class="reg">ClassTrack Student</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="dashboard-content">
+            <h1 class="page-title">Weekly Timetable</h1>
+            
+            <div class="timetable-grid" id="timetableGrid">
+                <!-- Headers -->
+                <div class="tt-header">Time</div>
+                <div class="tt-header">Monday</div>
+                <div class="tt-header">Tuesday</div>
+                <div class="tt-header">Wednesday</div>
+                <div class="tt-header">Thursday</div>
+                <div class="tt-header">Friday</div>
+
+                <!-- Dynamic Rows will be injected here -->
+            </div>
+        </section>
+    </main>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('nexus_user') || '{}');
+            if (user.name) {
+                document.querySelector('.profile-info .name').innerText = user.name;
+                document.querySelector('.profile-info .reg').innerText = user.id;
+                document.querySelector('.profile-info img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=ff6b00&color=fff`;
+            }
+
+            const subjects = getSubjects();
+            const grid = document.getElementById('timetableGrid');
+            const timeSlots = [
+                { time: "09:30 AM - 10:30 AM" },
+                { time: "10:30 AM - 11:30 AM" },
+                { time: "11:45 AM - 12:45 PM" },
+                { time: "01:30 PM - 02:30 PM" },
+                { time: "02:30 PM - 03:30 PM" }
+            ];
+
+            let html = `
+                <div class="tt-header">Time</div>
+                <div class="tt-header">Monday</div>
+                <div class="tt-header">Tuesday</div>
+                <div class="tt-header">Wednesday</div>
+                <div class="tt-header">Thursday</div>
+                <div class="tt-header">Friday</div>
+            `;
+
+            timeSlots.forEach((slot, rowIndex) => {
+                html += `<div class="tt-time">${slot.time.replace(' - ', '<br>-<br>')}</div>`;
+                for (let day = 0; day < 5; day++) {
+                    const subIndex = (rowIndex + day) % subjects.length;
+                    const subject = subjects[subIndex];
+                    if (subject && subject !== "No Assigned Subjects") {
+                        html += `<div class="tt-slot"><h4>${subject}</h4><p>Room ${300 + day + rowIndex}</p></div>`;
+                    } else {
+                        html += `<div class="tt-slot empty">Free Period</div>`;
+                    }
+                }
+            });
+
+            grid.innerHTML = html;
+        });
+    </script>
+</div>
+    <footer class="site-footer">
+        &copy; 2026 ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

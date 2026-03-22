@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Principal Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-building-line"></i>
+            <span>ClassTrack<strong>Executive</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#" onclick="switchView('dashboard', this)"><i class="ri-dashboard-line"></i> Institutional Metrics</a></li>
+            <li><a href="#" onclick="switchView('staff-directory', this)"><i class="ri-team-line"></i> Staff Directory</a></li>
+            <li><a href="#" onclick="switchView('campus-reports', this)"><i class="ri-file-chart-line"></i> Campus Reports</a></li>
+            <li><a href="#" onclick="switchView('governance', this)"><i class="ri-settings-line"></i> Governance</a></li>
+            <li><a href="#" onclick="switchView('profile', this)"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="#" onclick="switchView('settings', this)"><i class="ri-settings-4-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Principal's Control Panel</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=Principal&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span class="name">Dr. Miller</span>
+                        <span class="reg">Campus Principal</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="view-dashboard" class="admin-view active" style="padding: 2rem 3rem;">
+            <div class="action-header" style="padding: 24px; margin-bottom: 24px;">
+                <h1 class="page-title">Institutional Metrics</h1>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-user-heart-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Overall Attendance</h3>
+                        <p class="stat-value" style="color: var(--success);">89.4%</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-alarm-warning-line" style="color: var(--danger);"></i></div>
+                    <div class="stat-info">
+                        <h3>Low Attendance</h3>
+                        <p class="stat-value">42 Students</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-sparkling-2-line" style="color: var(--warning);"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Faculty</h3>
+                        <p class="stat-value">Active</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-2" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; margin-top: 24px;">
+                <div class="attendance-section" style="margin-top: 0;">
+                    <div class="section-header">
+                        <h2>Department Comparison</h2>
+                    </div>
+                    <div id="chartPlaceholder" style="height: 300px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); border-radius: var(--radius-md);">
+                        Analytics Data Active
+                    </div>
+                </div>
+
+                <div class="attendance-section" style="margin-top: 0;">
+                    <div class="section-header">
+                        <h2>Top Performing Classes</h2>
+                    </div>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+                            <span>B.Tech CS - Semester 5</span>
+                            <span style="color: var(--success); font-weight: 700;">96%</span>
+                        </li>
+                        <li style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+                            <span>BA Multimedia</span>
+                            <span style="color: var(--success); font-weight: 700;">92%</span>
+                        </li>
+                        <li style="display: flex; justify-content: space-between; padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-secondary);">
+                            <span>BSC Fashion</span>
+                            <span style="color: var(--warning); font-weight: 700;">84%</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </section>
+    
+            <section id="view-staff-directory" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Campus Staff Directory</h1>
+                </div>
+                <div class="card">
+                    <div class="toolbar" style="margin-bottom: 1.5rem; display: flex; justify-content: space-between;">
+                        <input type="text" placeholder="Search staff..." style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px; width: 300px;">
+                        <button class="btn-secondary"><i class="ri-filter-3-line"></i> Filter by Department</button>
+                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Designation / Role</th>
+                                <th>Department</th>
+                                <th>Contact</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Dr. Sarah Connor</td>
+                                <td>Head of Department (HOD)</td>
+                                <td>BA Animation & Graphic Design</td>
+                                <td>sarah.c@classtrack.edu</td>
+                                <td><span class="grid-badge badge-present">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Prof. John Smith</td>
+                                <td>Senior Faculty</td>
+                                <td>BA Animation & Graphic Design</td>
+                                <td>john.s@classtrack.edu</td>
+                                <td><span class="grid-badge badge-present">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Mr. Alan Grant</td>
+                                <td>Administrative Officer</td>
+                                <td>Registry / Office</td>
+                                <td>alan.g@classtrack.edu</td>
+                                <td><span class="grid-badge badge-present">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dr. Emily Watson</td>
+                                <td>Faculty</td>
+                                <td>BA Multimedia</td>
+                                <td>emily.w@classtrack.edu</td>
+                                <td><span class="grid-badge badge-absent" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">On Leave</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-campus-reports" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Executive Campus Reports</h1>
+                </div>
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-pie-chart-line"></i> Semester Overviews</h3>
+                    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                        <div style="flex: 1; padding: 1.5rem; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                            <h4 style="margin-bottom: 10px; color: var(--text-secondary);">Average Attendance</h4>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--success);">89.4%</div>
+                        </div>
+                        <div style="flex: 1; padding: 1.5rem; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                            <h4 style="margin-bottom: 10px; color: var(--text-secondary);">Total Disciplinary Flags</h4>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--warning);">14</div>
+                        </div>
+                        <div style="flex: 1; padding: 1.5rem; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center;">
+                            <h4 style="margin-bottom: 10px; color: var(--text-secondary);">Staff Availability</h4>
+                            <div style="font-size: 2rem; font-weight: 700; color: var(--accent-primary);">96%</div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" style="margin-top: 1.5rem; width: 100%; justify-content: center;"><i class="ri-download-cloud-2-line"></i> Generate Institutional Report PDF</button>
+                </div>
+            </section>
+
+            <section id="view-governance" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Institutional Governance</h1>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Active Campus Policies</h3>
+                    <ul style="list-style: none; padding: 0; display: flex; flex-direction: column; gap: 1rem;">
+                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                            <div>
+                                <h4 style="margin: 0 0 5px 0;">Minimum Attendance Threshold</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">Students below 75% are automatically flagged for HOD review.</span>
+                            </div>
+                            <span class="grid-badge badge-present">Enforced</span>
+                        </li>
+                        <li style="display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                            <div>
+                                <h4 style="margin: 0 0 5px 0;">Faculty Buffer Time</h4>
+                                <span style="font-size: 0.85rem; color: var(--text-secondary);">15-minute grace period for class attendance submission.</span>
+                            </div>
+                            <span class="grid-badge badge-present">Enforced</span>
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="view-profile" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Executive Profile</h1>
+                </div>
+                <div class="card" style="display: flex; gap: 2rem; align-items: flex-start;">
+                    <img src="https://ui-avatars.com/api/?name=Principal&background=ff6b00&color=fff&size=150" alt="Profile" style="border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="flex: 1;">
+                        <h2 style="margin-bottom: 5px;">Dr. Miller</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Campus Principal</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 5px;">Employee ID</label>
+                                <div style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px;">EMP-PRN-001</div>
+                            </div>
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 5px;">Email Address</label>
+                                <div style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px;">principal@classtrack.edu</div>
+                            </div>
+                        </div>
+                        <button class="btn-primary"><i class="ri-edit-line"></i> Edit Details</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-settings" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Preferences</h1>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Notification Settings</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                        <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                            <span>Monthly Institutional Summary</span>
+                            <input type="checkbox" checked style="width: 20px; height: 20px;">
+                        </label>
+                        <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                            <span>Critical Disciplinary Alerts</span>
+                            <input type="checkbox" checked style="width: 20px; height: 20px;">
+                        </label>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Security Settings</h3>
+                    <button class="btn-secondary"><i class="ri-lock-password-line"></i> Change Password</button>
+                </div>
+            </section>
+    </main>
+    </div>
+    <footer class="site-footer">
+        &copy; <span id="currentYear"></span> ClassTrack Executive Panel. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('currentYear').innerText = new Date().getFullYear();
+    </script>
+
+    <style>
+        .admin-view { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .admin-view.active { display: block; }
+    </style>
+    <script>
+        function switchView(viewId, element) {
+            document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            
+            if(element) {
+                document.querySelectorAll('.sidebar .nav-links li').forEach(li => li.classList.remove('active'));
+                element.parentElement.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

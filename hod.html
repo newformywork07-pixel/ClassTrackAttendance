@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | HOD ClassTrack</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-focus-2-line"></i>
+            <span>ClassTrack<strong>HOD</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#" onclick="switchView('dashboard', this)"><i class="ri-dashboard-line"></i> Dept Metrics</a></li>
+            <li><a href="#" onclick="switchView('faculty-load', this)"><i class="ri-group-line"></i> Faculty Load</a></li>
+            <li><a href="#" onclick="switchView('curriculum', this)"><i class="ri-book-open-line"></i> Curriculum</a></li>
+            <li><a href="#" onclick="switchView('reports', this)"><i class="ri-file-list-line"></i> Reports</a></li>
+            <li><a href="#" onclick="switchView('profile', this)"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="#" onclick="switchView('settings', this)"><i class="ri-settings-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Department Head Portal</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=HOD&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span class="name">Dr. Sarah Connor</span>
+                        <span class="reg">Head of Department</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section id="view-dashboard" class="admin-view active" style="padding: 2rem 3rem;">
+            <div class="action-header" style="padding: 24px; border-radius: var(--radius-md); margin-bottom: 24px;">
+                <h1 class="page-title">Department Overview</h1>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-team-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Students</h3>
+                        <p class="stat-value">450</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-calendar-check-line" style="color: var(--success);"></i></div>
+                    <div class="stat-info">
+                        <h3>Avg. Attendance</h3>
+                        <p class="stat-value">91%</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-error-warning-line" style="color: var(--danger);"></i></div>
+                    <div class="stat-info">
+                        <h3>Low Attendance</h3>
+                        <p class="stat-value">12 Students</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attendance-section" style="margin-top: 24px;">
+                <div class="section-header">
+                    <h2>Faculty Stream Completion</h2>
+                </div>
+                <div class="table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Faculty Name</th>
+                                <th>Assigned Class</th>
+                                <th>Status</th>
+                                <th>Sync Time</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Prof. Smith</td>
+                                <td>Semester 5 - Sec A</td>
+                                <td><span class="grid-badge badge-present">MARKED</span></td>
+                                <td>10:45 AM Today</td>
+                            </tr>
+                            <tr>
+                                <td>Dr. Emily Watson</td>
+                                <td>Semester 3 - Sec B</td>
+                                <td><span class="grid-badge badge-absent">PENDING</span></td>
+                                <td>--</td>
+                            </tr>
+                            <tr>
+                                <td>Prof. Banner</td>
+                                <td>Semester 1 - Sec A</td>
+                                <td><span class="grid-badge badge-present">MARKED</span></td>
+                                <td>09:30 AM Today</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    
+            <section id="view-faculty-load" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Faculty Load & Assignments</h1>
+                </div>
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Faculty Name</th>
+                                <th>Assigned Subjects</th>
+                                <th>Weekly Hours</th>
+                                <th>Primary Class</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Prof. John Smith</td>
+                                <td>Digital Illustration (Sem 1)</td>
+                                <td>16 Hrs</td>
+                                <td>Semester 1 - Sec A</td>
+                                <td><span class="grid-badge badge-present">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dr. Emily Watson</td>
+                                <td>3D Modeling Pipeline</td>
+                                <td>12 Hrs</td>
+                                <td>Semester 3 - Sec B</td>
+                                <td><span class="grid-badge badge-present">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>Prof. Robert Banner</td>
+                                <td>Animation Principles</td>
+                                <td>18 Hrs</td>
+                                <td>Semester 1 - Sec A</td>
+                                <td><span class="grid-badge badge-absent" style="background: rgba(245, 158, 11, 0.1); color: var(--warning);">On Leave</span></td>
+                            </tr>
+                            <tr>
+                                <td>Dr. Olivia Davis</td>
+                                <td>Character Rigging</td>
+                                <td>14 Hrs</td>
+                                <td>Semester 5 - Sec A</td>
+                                <td><span class="grid-badge badge-present">Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-curriculum" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center;">
+                    <h1 class="page-title">Curriculum Registry</h1>
+                    <button class="btn-primary" style="padding: 8px 16px;"><i class="ri-download-2-line"></i> Export Syllabus</button>
+                </div>
+                <div class="card">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Subject Code</th>
+                                <th>Subject Name</th>
+                                <th>Credits</th>
+                                <th>Semester</th>
+                                <th>Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>ANI101</td>
+                                <td>Fundamentals of Design</td>
+                                <td>4</td>
+                                <td>Semester 1</td>
+                                <td>Core</td>
+                            </tr>
+                            <tr>
+                                <td>ANI102</td>
+                                <td>Digital Illustration</td>
+                                <td>3</td>
+                                <td>Semester 1</td>
+                                <td>Core</td>
+                            </tr>
+                            <tr>
+                                <td>MM201</td>
+                                <td>3D Modeling Pipeline</td>
+                                <td>4</td>
+                                <td>Semester 3</td>
+                                <td>Core</td>
+                            </tr>
+                            <tr>
+                                <td>MM205</td>
+                                <td>Cinematography</td>
+                                <td>3</td>
+                                <td>Semester 3</td>
+                                <td>Elective</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section id="view-reports" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Department Reports</h1>
+                </div>
+                <div class="grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-file-chart-line"></i> Mid-Semester Attendance</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">Generated on Oct 15, 2026. Consolidated attendance for all active batches.</p>
+                        <button class="btn-secondary" style="width: 100%; justify-content: center;"><i class="ri-download-line"></i> Download PDF (2.4 MB)</button>
+                    </div>
+                    <div class="card">
+                        <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-alert-line" style="color: var(--danger);"></i> Defaulters List - Nov '26</h3>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">List of students with attendance below 75% across core subjects.</p>
+                        <button class="btn-secondary" style="width: 100%; justify-content: center; color: var(--danger); border-color: rgba(239, 68, 68, 0.3);"><i class="ri-download-line"></i> Download Excel</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-profile" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">My Profile</h1>
+                </div>
+                <div class="card" style="display: flex; gap: 2rem; align-items: flex-start;">
+                    <img src="https://ui-avatars.com/api/?name=HOD&background=ff6b00&color=fff&size=150" alt="Profile" style="border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="flex: 1;">
+                        <h2 style="margin-bottom: 5px;">Dr. Sarah Connor</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Head of Department - Animation & Graphic Design</p>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem;">
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 5px;">Employee ID</label>
+                                <div style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px;">EMP-HOD-045</div>
+                            </div>
+                            <div>
+                                <label style="display: block; color: var(--text-secondary); font-size: 0.85rem; margin-bottom: 5px;">Email Address</label>
+                                <div style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 6px;">sarah.connor@classtrack.edu</div>
+                            </div>
+                        </div>
+                        <button class="btn-primary"><i class="ri-edit-line"></i> Edit Details</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="view-settings" class="admin-view" style="padding: 2rem 3rem;">
+                <div class="action-header" style="margin-bottom: 24px;">
+                    <h1 class="page-title">Preferences</h1>
+                </div>
+                <div class="card">
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Notification Settings</h3>
+                    <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem;">
+                        <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                            <span>Weekly Department Summary Report</span>
+                            <input type="checkbox" checked style="width: 20px; height: 20px;">
+                        </label>
+                        <label style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                            <span>Alerts for Faculty Attendance Misses</span>
+                            <input type="checkbox" checked style="width: 20px; height: 20px;">
+                        </label>
+                    </div>
+
+                    <h3 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Security Settings</h3>
+                    <button class="btn-secondary"><i class="ri-lock-password-line"></i> Change Password</button>
+                </div>
+            </section>
+    </main>
+    </div>
+    <footer class="site-footer">
+        &copy; <span id="currentYear"></span> ClassTrack HOD Portal. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        document.getElementById('currentYear').innerText = new Date().getFullYear();
+    </script>
+
+    <style>
+        .admin-view { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .admin-view.active { display: block; }
+    </style>
+    <script>
+        function switchView(viewId, element) {
+            document.querySelectorAll('.admin-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            
+            if(element) {
+                document.querySelectorAll('.sidebar .nav-links li').forEach(li => li.classList.remove('active'));
+                element.parentElement.classList.add('active');
+            }
+        }
+    </script>
+</body>
+</html>

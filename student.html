@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Student Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-user-heart-fill"></i>
+            <span>ClassTrack<strong>Student</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="student.html"><i class="ri-dashboard-line"></i> Overview</a></li>
+            <li><a href="student_attendance.html"><i class="ri-calendar-check-line"></i> My Attendance</a></li>
+            <li><a href="student_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Report</a></li>
+            <li><a href="student_timetable.html"><i class="ri-book-read-line"></i> Class Timetable</a></li>
+            <li><a href="student_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="student_settings.html"><i class="ri-settings-4-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Student Portal Dashboard</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Student Name</span>
+                        <span id="userReg" class="reg">Roll Number</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="dashboard-content">
+            <h1 class="page-title">Overview</h1>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-check-double-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Classes</h3>
+                        <p class="stat-value">120</p>
+                    </div>
+                </div>
+                <div class="stat-card present">
+                    <div class="stat-icon"><i class="ri-user-smile-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Present Days</h3>
+                        <p class="stat-value">102</p>
+                    </div>
+                </div>
+                <div class="stat-card absent">
+                    <div class="stat-icon"><i class="ri-user-unfollow-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Absent Days</h3>
+                        <p class="stat-value">18</p>
+                    </div>
+                </div>
+                <div class="stat-card accent">
+                    <div class="progress-circle" data-percentage="85">
+                        <svg viewBox="0 0 36 36" class="circular-chart">
+                            <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle" stroke-dasharray="85, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" class="percentage">85%</text>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Attendance</h3>
+                        <p class="stat-subtitle">Overall Percentage</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attendance-section" style="margin-top: 24px;">
+                <div class="section-header">
+                    <h2><i class="ri-history-line"></i> Recent Attendance</h2>
+                    <button class="btn-secondary">Export Records <i class="ri-download-line"></i></button>
+                </div>
+                <div class="table-container">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Subject</th>
+                                <th>Instructor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentAttendanceTable">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="site-footer">
+        &copy; <span id="currentYear"></span> ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof renderStudentLog === 'function') {
+                renderStudentLog();
+            }
+
+            // Google-style Fireworks Easter Egg for >= 75% Attendance
+            const progressCircle = document.querySelector('.progress-circle');
+            if (progressCircle) {
+                const percentage = parseInt(progressCircle.getAttribute('data-percentage'), 10);
+                if (percentage >= 75) {
+                    setTimeout(() => {
+                        const duration = 5 * 1000;
+                        const animationEnd = Date.now() + duration;
+                        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 9999, colors: ['#ff6b00', '#10b981', '#3b82f6', '#f59e0b', '#ffffff'] };
+
+                        function randomInRange(min, max) {
+                            return Math.random() * (max - min) + min;
+                        }
+
+                        const interval = setInterval(function() {
+                            const timeLeft = animationEnd - Date.now();
+                            if (timeLeft <= 0) {
+                                return clearInterval(interval);
+                            }
+                            const particleCount = 50 * (timeLeft / duration);
+                            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+                        }, 250);
+                    }, 800); // Slight delay for dramatic effect after page load
+                }
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+</body>
+</html>

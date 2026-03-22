@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Teacher Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-graduation-cap-fill"></i>
+            <span>ClassTrack<strong>Teacher</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="teacher.html"><i class="ri-time-line"></i> Hourly Attendance</a></li>
+            <li><a href="teacher_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Attendance</a></li>
+            <li><a href="teacher_reports.html"><i class="ri-file-chart-line"></i> Reports</a></li>
+            <li><a href="teacher_classes.html"><i class="ri-group-line"></i> My Classes</a></li>
+            <li><a href="teacher_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="teacher_settings.html"><i class="ri-settings-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Faculty Portal Dashboard</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Faculty Member</span>
+                        <span id="userDept" class="reg">Department</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+            <div class="action-header" style="padding: 20px; margin-bottom: 24px;">
+                <div>
+                    <h1 class="page-title">Attendance Control Center</h1>
+                </div>
+                <div style="text-align: right;">
+                    <div class="date-display" id="currentDate"></div>
+                </div>
+            </div>
+
+            
+            <div class="filter-card" id="subjectFilterCard">
+                <div class="filter-group">
+                    <label>Select Class/Batch</label>
+                    <div class="select-wrapper">
+                        <i class="ri-group-fill"></i>
+                        <select id="classSelector">
+                            <option value="" disabled selected>Choose a class</option>
+                            <!-- Populated by JS -->
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Select Period/Hour</label>
+                    <div class="select-wrapper">
+                        <i class="ri-time-line"></i>
+                        <select id="periodSelector">
+                            <option value="" disabled selected>Choose period</option>
+                            <option value="1">Period 1 (9:30 AM - 10:30 AM)</option>
+                            <option value="2">Period 2 (10:30 AM - 11:30 AM)</option>
+                            <option value="3">Period 3 (11:45 AM - 12:45 PM)</option>
+                            <option value="4">Period 4 (1:30 PM - 2:30 PM)</option>
+                            <option value="5">Period 5 (2:30 PM - 3:30 PM)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Select Subject</label>
+                    <div class="select-wrapper">
+                        <i class="ri-book-open-fill"></i>
+                        <select id="subjectSelector">
+                            <!-- Populated dynamically by JS -->
+                            <option value="" disabled selected>Choose a subject</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary" id="loadRosterBtn" onclick="loadClassRoster('subject')">
+                    Load Roster
+                </button>
+            </div>
+
+            <div class="filter-card" id="dailyFilterCard" style="display: none;">
+                <div class="filter-group" style="flex: 2;">
+                    <label>Class In-Charge of:</label>
+                    <div class="select-wrapper" style="background: rgba(255,107,0,0.1); border-color: rgba(255,107,0,0.3);">
+                        <i class="ri-shield-user-line" style="color: var(--accent-primary);"></i>
+                        <input type="text" id="inChargeClassDisplay" readonly style="background: transparent; border: none; color: white; padding: 10px; width: 100%;" value="Loading...">
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Attendance Type</label>
+                    <div class="select-wrapper">
+                        <i class="ri-sun-cloudy-line"></i>
+                        <select id="dailyTypeSelector">
+                            <option value="morning">Morning Attendance</option>
+                            <option value="noon">Noon Attendance</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="loadClassRoster('daily')">
+                    Open Daily Register
+                </button>
+            </div>
+
+            <div class="attendance-marking-section" id="rosterSection" style="display: none;">
+                <div class="marking-controls">
+                    <div class="mark-all-controls">
+                        <button class="btn-outline present" onclick="markAll('present')">Mark All Present</button>
+                        <button class="btn-outline absent" onclick="markAll('absent')">Mark All Absent</button>
+                    </div>
+                    <div class="summary-counts">
+                        <span class="badge present">Present: <span id="countPresent">0</span></span>
+                        <span class="badge absent">Absent: <span id="countAbsent">0</span></span>
+                    </div>
+                </div>
+
+                <div class="student-roster">
+                    <table class="attendance-table roster-table">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Student Name</th>
+                                <th>Previous Auth</th>
+                                <th>Action (P / A)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTbody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="action-footer">
+                    <button class="btn-primary save-btn" id="saveAttendanceBtn" onclick="saveAttendance()">
+                        <span class="btn-text">Save Attendance</span>
+                        <i class="ri-save-line"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Success Modal -->
+            <div class="modal" id="successModal">
+                <div class="modal-content">
+                    <div class="success-icon">
+                        <i class="ri-check-line"></i>
+                    </div>
+                    <h2>Attendance Saved!</h2>
+                    <p>The attendance records have been successfully updated in the database.</p>
+                    <button class="btn-primary" onclick="closeModal()">Continue</button>
+                </div>
+            </div>
+    </main>
+    </div>
+    <footer class="site-footer">
+        &copy; <span id="currentYear"></span> ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        // Date initialization
+        const dateElement = document.getElementById('currentDate');
+        if(dateElement) {
+            const now = new Date();
+            dateElement.innerText = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+    </script>
+</body>
+</html>

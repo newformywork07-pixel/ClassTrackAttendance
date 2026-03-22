@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | System Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .profile-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 40px;
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            border: 1px solid rgba(255,255,255,0.03);
+            margin-top: 24px;
+        }
+        .profile-sidebar {
+            text-align: center;
+            width: 250px;
+        }
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 3px solid var(--accent-primary);
+            margin-bottom: 16px;
+        }
+        .profile-sidebar h2 { font-size: 1.5rem; margin-bottom: 4px; }
+        .profile-sidebar p { color: var(--text-secondary); margin-bottom: 16px; }
+        .profile-details { flex: 1; }
+        .detail-group { margin-bottom: 24px; }
+        .detail-group label { display: block; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 8px; }
+        .detail-value { background: rgba(0,0,0,0.2); padding: 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); color: var(--text-primary); }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-user-heart-fill"></i>
+            <span>ClassTrack<strong>Student</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="student.html"><i class="ri-dashboard-line"></i> Overview</a></li>
+            <li><a href="student_attendance.html"><i class="ri-calendar-check-line"></i> My Attendance</a></li>
+            <li><a href="student_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Report</a></li>
+            <li><a href="student_timetable.html"><i class="ri-book-read-line"></i> Class Timetable</a></li>
+            <li><a href="student_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li class="active"><a href="student_settings.html"><i class="ri-settings-4-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <div class="search-bar">
+                <i class="ri-search-line"></i>
+                <input type="text" placeholder="Search modules, attendance...">
+            </div>
+            <div class="profile-menu">
+                <div class="notification-icon">
+                    <i class="ri-notification-3-line"></i>
+                    <span class="badge">3</span>
+                </div>
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Student Name</span>
+                        <span id="userReg" class="reg">ID Number</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <section class="dashboard-content">
+            <h1 class="page-title">App Settings</h1>
+            
+            <div class="grid-2" style="display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 800px;">
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-shield-keyhole-line"></i> Security & Access</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">Two-Factor Authentication (2FA)</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Require a code from an authenticator app when logging in.</p>
+                        </div>
+                        <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                            <input type="checkbox" style="opacity: 0; width: 0; height: 0;">
+                            <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px;"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">Change Password</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Update your current authentication credentials.</p>
+                        </div>
+                        <button class="btn-secondary">Update Password</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-paint-line"></i> Appearance & UI</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="border: 2px solid var(--accent-primary); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: pointer; background: rgba(0,0,0,0.2);">
+                            <i class="ri-moon-fill" style="font-size: 1.5rem; color: var(--accent-primary); margin-bottom: 0.5rem; display: block;"></i>
+                            <span style="font-weight: 600;">Dark Mode</span>
+                        </div>
+                        <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: not-allowed; opacity: 0.5;">
+                            <i class="ri-sun-line" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                            <span>Light Mode</span>
+                        </div>
+                        <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: not-allowed; opacity: 0.5;">
+                            <i class="ri-computer-line" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                            <span>System Default</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Currently locked to "Glass Dark Form" per institutional mandate.</p>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <footer class="site-footer">
+        &copy; 2026 ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('nexus_user') || '{}');
+            if (user.name) {
+                document.getElementById('profileCardName').innerText = user.name;
+                document.getElementById('profileCardDept').innerText = user.dept || 'Student';
+                document.getElementById('profileCardReg').innerText = user.id;
+                document.getElementById('profileCardEmail').innerText = user.id + "@classtrack.edu";
+                document.getElementById('profileCardAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=ff6b00&color=fff&size=200`;
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | My Classes</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .classes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+        .class-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            transition: var(--transition-fast);
+        }
+        .class-card:hover {
+            border-color: var(--accent-primary);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        .class-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+        .class-card p { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 20px; }
+        .class-meta { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-color); padding-top: 16px; margin-top: auto; }
+        .meta-item { display: flex; align-items: center; gap: 6px; font-size: 0.85rem; color: var(--text-muted); }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-graduation-cap-fill"></i>
+            <span>ClassTrack<strong>Teacher</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="teacher.html"><i class="ri-time-line"></i> Hourly Attendance</a></li>
+            <li><a href="teacher_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Attendance</a></li>
+            <li><a href="teacher_reports.html"><i class="ri-file-chart-line"></i> Reports</a></li>
+            <li class="active"><a href="teacher_classes.html"><i class="ri-group-line"></i> My Classes</a></li>
+            <li><a href="teacher_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="teacher_settings.html"><i class="ri-settings-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Assigned Classes & Academic Batches</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Faculty Member</span>
+                        <span id="userDept" class="reg">Class Supervisor</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+            <h1 class="page-title">Assigned Classes</h1>
+            
+            <div class="classes-grid" id="classesGrid">
+                <!-- Dynamic Class Cards will be injected here -->
+            </div>
+        </section>
+    </main>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('nexus_user') || '{}');
+            if (user.name) {
+                document.querySelector('.profile-info .name').innerText = user.name;
+                document.querySelector('.profile-info .reg').innerText = user.dept || 'Faculty';
+                document.querySelector('.profile-info img').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=ff6b00&color=fff`;
+            }
+
+            const allClasses = JSON.parse(localStorage.getItem('admin_classes') || '[]');
+            const myClasses = allClasses.filter(c => c.inChargeId === user.id);
+            const grid = document.getElementById('classesGrid');
+
+            if (myClasses.length === 0) {
+                grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 50px; color: var(--text-secondary);">
+                    <i class="ri-information-line" style="font-size: 3rem; display: block; margin-bottom: 10px;"></i>
+                    <p>No classes currently assigned to you.</p>
+                </div>`;
+                return;
+            }
+
+            grid.innerHTML = myClasses.map(cls => `
+                <div class="class-card">
+                    <h3>${cls.name}</h3>
+                    <p>${cls.dept}</p>
+                    <div class="class-meta">
+                        <div class="meta-item"><i class="ri-user-line"></i> 60 Students</div>
+                        <div class="meta-item"><i class="ri-time-line"></i> Weekdays</div>
+                    </div>
+                </div>
+            `).join('');
+        });
+    </script>
+</div>
+    <footer class="site-footer">
+        &copy; 2026 ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

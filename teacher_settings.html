@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Settings</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .settings-card {
+            background: var(--bg-card);
+            border: 1px solid rgba(255,255,255,0.03);
+            border-radius: var(--radius-md);
+            padding: 32px;
+            max-width: 600px;
+        }
+        .settings-card h2 { font-size: 1.2rem; margin-bottom: 24px; color: var(--text-primary); }
+        .form-group { margin-bottom: 24px; }
+        .form-group label { display: block; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 8px; }
+        .form-group input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); padding: 12px 16px; border-radius: var(--radius-sm); color: var(--text-primary); outline: none; transition: var(--transition-fast); }
+        .form-group input:focus { border-color: var(--accent-primary); }
+        .setting-toggle { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border-color); }
+        .setting-toggle:last-child { border-bottom: none; }
+        .setting-info h4 { font-size: 0.95rem; margin-bottom: 4px; }
+        .setting-info p { font-size: 0.85rem; color: var(--text-secondary); }
+        
+        /* Custom Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: var(--text-secondary); transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-primary); }
+        input:checked + .slider:before { transform: translateX(20px); background-color: white; }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-graduation-cap-fill"></i>
+            <span>ClassTrack<strong>Teacher</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="teacher.html"><i class="ri-time-line"></i> Hourly Attendance</a></li>
+            <li><a href="teacher_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Attendance</a></li>
+            <li><a href="teacher_reports.html"><i class="ri-file-chart-line"></i> Reports</a></li>
+            <li><a href="teacher_classes.html"><i class="ri-group-line"></i> My Classes</a></li>
+            <li><a href="teacher_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li class="active"><a href="teacher_settings.html"><i class="ri-settings-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Profile & Preferences</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Faculty Member</span>
+                        <span id="userDept" class="reg">Settings Panel</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        
+        <section class="dashboard-content">
+            <h1 class="page-title">App Settings</h1>
+            
+            <div class="grid-2" style="display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 800px;">
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-shield-keyhole-line"></i> Security & Access</h3>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">Two-Factor Authentication (2FA)</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Require a code from an authenticator app when logging in.</p>
+                        </div>
+                        <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                            <input type="checkbox" style="opacity: 0; width: 0; height: 0;">
+                            <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 34px;"></span>
+                        </label>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <div>
+                            <h4 style="margin-bottom: 4px;">Change Password</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary);">Update your current authentication credentials.</p>
+                        </div>
+                        <button class="btn-secondary">Update Password</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-paint-line"></i> Appearance & UI</h3>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1rem;">
+                        <div style="border: 2px solid var(--accent-primary); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: pointer; background: rgba(0,0,0,0.2);">
+                            <i class="ri-moon-fill" style="font-size: 1.5rem; color: var(--accent-primary); margin-bottom: 0.5rem; display: block;"></i>
+                            <span style="font-weight: 600;">Dark Mode</span>
+                        </div>
+                        <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: not-allowed; opacity: 0.5;">
+                            <i class="ri-sun-line" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                            <span>Light Mode</span>
+                        </div>
+                        <div style="border: 1px solid var(--border-color); padding: 1rem; border-radius: var(--radius-sm); text-align: center; cursor: not-allowed; opacity: 0.5;">
+                            <i class="ri-computer-line" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                            <span>System Default</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Currently locked to "Glass Dark Form" per institutional mandate.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+    </div>
+    <footer class="site-footer">
+        &copy; 2026 ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             const user = JSON.parse(localStorage.getItem('nexus_user') || '{}');
+             if (user.name) {
+                 document.getElementById('settingName').value = user.name;
+                 document.getElementById('settingEmail').value = user.id + "@classtrack.edu";
+             }
+        });
+    </script>
+</body>
+</html>

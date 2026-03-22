@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Login</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="glow-orb"></div>
+        <div class="login-card">
+            <div class="logo">
+                <i class="ri-graduation-cap-fill"></i>
+                <span>ClassTrack<strong>Edu</strong></span>
+            </div>
+            <h2>Welcome Back</h2>
+            <p class="subtitle">Sign in to your college portal</p>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <label for="regNumber">Register Number</label>
+                    <div class="input-wrapper">
+                        <i class="ri-user-line"></i>
+                        <input type="text" id="regNumber" placeholder="e.g. 20XXBCD123" required>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i class="ri-lock-line"></i>
+                        <input type="password" id="password" placeholder="••••••••" required>
+                    </div>
+                </div>
+                
+                <div class="form-footer">
+                    <label class="remember-me">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <a href="forgot_password.html" class="forgot-pwd">Forgot password?</a>
+                </div>
+
+
+                <div id="loginError" style="color: var(--danger); background: var(--danger-bg); padding: 10px; border-radius: var(--radius-sm); margin-bottom: 20px; display: none; text-align: center; font-size: 0.9rem; border: 1px solid rgba(239, 68, 68, 0.2);"></div>
+
+                <button type="submit" class="btn-primary" id="loginBtn">
+                    <span class="btn-text">Sign In</span>
+                    <i class="ri-arrow-right-line"></i>
+                </button>
+
+                <div class="form-footer" style="justify-content: center; margin-top: 1.5rem;">
+                </div>
+            </form>
+        </div>
+    </div>
+    <footer class="site-footer login-footer">
+        &copy; <span id="currentYear"></span> ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js" defer></script>
+</body>
+</html>

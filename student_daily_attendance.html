@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Daily Attendance</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-user-heart-fill"></i>
+            <span>ClassTrack<strong>Student</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="student.html"><i class="ri-dashboard-line"></i> Overview</a></li>
+            <li><a href="student_attendance.html"><i class="ri-calendar-check-line"></i> My Attendance</a></li>
+            <li class="active"><a href="student_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Report</a></li>
+            <li><a href="student_timetable.html"><i class="ri-book-read-line"></i> Class Timetable</a></li>
+            <li><a href="student_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="student_settings.html"><i class="ri-settings-4-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Student Portal</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Student Name</span>
+                        <span id="userReg" class="reg">ClassTrack Student</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <section class="dashboard-content">
+            <h1 class="page-title">Daily Base Attendance (Morning/Noon)</h1>
+            
+            <div class="attendance-section">
+                <div class="section-header">
+                    <h2>Semester Log</h2>
+                    <div class="attendance-legend" style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <span class="grid-badge badge-present">PRESENT</span>
+                        <span class="grid-badge badge-absent">ABSENT</span>
+                        <span class="grid-badge badge-not-entered">NOT MARKED YET</span>
+                    </div>
+                    <button class="btn-secondary">Export Log <i class="ri-download-line"></i></button>
+                </div>
+                <div class="table-container" style="max-height: 500px; overflow-y: auto;">
+                    <table class="attendance-table grid-view">
+                        <thead>
+                            <tr>
+                                <th>DATE</th>
+                                <th>MORNING SESSION</th>
+                                <th>AFTERNOON SESSION</th>
+                                <th>OVERALL DAILY STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentDailyAttendanceTable">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+    </div>
+    <footer class="site-footer">
+        &copy; 2026 ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderStudentDailyLog(); 
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | System Core Admin</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+    <style>
+        .admin-sidebar {
+            background: linear-gradient(180deg, var(--bg-card) 0%, rgba(30, 41, 59, 0.4) 100%);
+            border-right: 1px solid var(--border-color);
+        }
+        
+
+        .admin-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: var(--bg-main);
+        }
+
+        .admin-view {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+            padding: 2rem 3rem;
+        }
+        
+        .admin-view .top-nav {
+            margin: -2rem -3rem 2rem -3rem;
+            width: calc(100% + 6rem);
+            border-left: none;
+            border-right: none;
+        }
+
+        .admin-view.active {
+            display: block;
+        }
+
+        /* Tables & Lists */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+        }
+
+        .data-table th, .data-table td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background: rgba(255, 255, 255, 0.02);
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .data-table tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+        
+        .action-btns i {
+            font-size: 1.2rem;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .action-btns i:hover {
+            color: var(--accent-primary);
+        }
+        
+        .btn-danger { color: var(--danger); }
+        .btn-danger:hover { color: #ef4444; }
+
+        /* Profile Editor Layout */
+        .profile-editor-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+        }
+
+        .profile-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-card .avatar {
+            width: 100px;
+            height: 100px;
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-details form {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Search & Filters */
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .toolbar .search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 1rem;
+            width: 300px;
+        }
+
+        .toolbar .search-box input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            outline: none;
+            margin-left: 0.5rem;
+            width: 100%;
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 10px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition-fast);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--text-secondary);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-shield-user-fill"></i>
+            <span>ClassTrack<strong>Admin</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li class="active"><a href="#" onclick="switchView('dashboard', this)"><i class="ri-dashboard-line"></i> Dashboard</a></li>
+            <li><a href="#" onclick="switchView('users', this)"><i class="ri-group-line"></i> User Management</a></li>
+            <li><a href="#" onclick="switchView('classes', this)"><i class="ri-community-line"></i> Departments & Classes</a></li>
+            <li><a href="#" onclick="switchView('subjects', this)"><i class="ri-book-open-line"></i> Global Subjects</a></li>
+            <li><a href="#" onclick="switchView('attendance', this)"><i class="ri-calendar-check-line"></i> Attendance</a></li>
+            <li><a href="#" onclick="switchView('logs', this)"><i class="ri-database-2-line"></i> System Logs</a></li>
+            <li><a href="#" onclick="switchView('modifications', this)"><i class="ri-settings-4-line"></i> System Mods</a></li>
+            <li><a href="#" onclick="switchView('profile', this)"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="#" onclick="switchView('settings', this)"><i class="ri-settings-line"></i> Settings</a></li>
+        </ul>
+
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <!-- Dashboard View -->
+            <section id="view-dashboard" class="admin-view active">
+            <header class="top-nav">
+                <div class="page-info">
+                    <h1 id="view-title">Admin Dashboard</h1>
+                    <p class="subtitle">ClassTrack Institutional Control Panel</p>
+                </div>
+                <div class="profile-menu">
+                    <div class="profile-info">
+                        <img id="userAvatar" src="https://ui-avatars.com/api/?name=Admin&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                        <div class="user-details">
+                            <span class="name">Super Admin</span>
+                            <span class="reg">Root Access</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+                <div class="admin-stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-user-smile-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Students</h3>
+                            <div class="stat-value" id="stat-total-students">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-graduation-cap-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Faculty</h3>
+                            <div class="stat-value" id="stat-total-faculty">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-book-open-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Active Subjects</h3>
+                            <div class="stat-value" id="stat-active-subjects">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-government-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Total Classes</h3>
+                            <div class="stat-value" id="stat-total-classes">0</div>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="ri-error-warning-line"></i></div>
+                        <div class="stat-info">
+                            <h3>Suspended</h3>
+                            <div class="stat-value" id="stat-suspended">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2" style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-bar-chart-box-line"></i> Attendance Overview</h3>
+                        <div id="attendanceChartPlaceholder" style="height: 150px; display: flex; align-items: center; justify-content: center; background: rgba(0,0,0,0.1); border-radius: 8px; color: var(--text-secondary);">
+                            Live Analytics Active
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;"><i class="ri-history-line"></i> Recent Activity</h3>
+                        <ul id="activity-list" style="list-style: none; padding: 0;">
+                            <!-- Populated by JS -->
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- User Management View -->
+            <section id="view-users" class="admin-view">
+                <header class="header">
+                    <div>
+                        <h1>User Directory</h1>
+                        <p class="subtitle" style="color: var(--text-secondary);">Search, filter, and manage all accounts</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn-secondary" onclick="clearAllUsers()" style="color: var(--danger); border-color: rgba(239, 68, 68, 0.3);">
+                            <i class="ri-delete-bin-line"></i> Clear Everything
+                        </button>
+                        <button class="btn-primary" onclick="showAddUserModal()">
+                            <i class="ri-user-add-line"></i> Add User
+                        </button>
+                    </div>
+                </header>
+
+                <div class="card">
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="userSearchInput" placeholder="Search by name or ID..." oninput="handleSearch()">
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div class="tabs" style="display: flex; background: rgba(0,0,0,0.2); border-radius: var(--radius-sm); padding: 5px; flex-wrap: wrap; gap: 5px;">
+                                <button id="userTab-Student" class="btn-tab active" onclick="switchUserTab('Student')" style="padding: 5px 15px; border: none; background: var(--accent-primary); color: white; border-radius: 4px; cursor: pointer; transition: 0.3s;">Students</button>
+                                <button id="userTab-Faculty" class="btn-tab" onclick="switchUserTab('Faculty')" style="padding: 5px 15px; border: none; background: transparent; color: var(--text-secondary); border-radius: 4px; cursor: pointer; transition: 0.3s;">Faculties</button>
+                                <button id="userTab-HOD" class="btn-tab" onclick="switchUserTab('HOD')" style="padding: 5px 15px; border: none; background: transparent; color: var(--text-secondary); border-radius: 4px; cursor: pointer; transition: 0.3s;">HODs</button>
+                                <button id="userTab-Principal" class="btn-tab" onclick="switchUserTab('Principal')" style="padding: 5px 15px; border: none; background: transparent; color: var(--text-secondary); border-radius: 4px; cursor: pointer; transition: 0.3s;">Principal</button>
+                                <button id="userTab-Office" class="btn-tab" onclick="switchUserTab('Office')" style="padding: 5px 15px; border: none; background: transparent; color: var(--text-secondary); border-radius: 4px; cursor: pointer; transition: 0.3s;">Office</button>
+                            </div>
+                            <select id="deptFilter" onchange="handleSearch()" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); padding: 0.5rem; border-radius: var(--radius-sm);">
+                                <option value="all">All Departments</option>
+                                <option value="BA ANIMATION & GRAPHIC DESIGN">BA Animation & Graphic Design</option>
+                                <option value="BA ANIMATION & VISUAL EFFECTS">BA Animation & Visual Effects</option>
+                                <option value="BA MULTIMEDIA">BA Multimedia</option>
+                                <option value="BA INTERIOR DESIGN">BA Interior Design</option>
+                                <option value="BSC FASHION">BSC Fashion</option>
+                            </select>
+                            <button class="btn-secondary" onclick="resetUsersToDefault()"><i class="ri-restart-line"></i> Reset Defaults</button>
+                        </div>
+                    </div>
+
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Department</th>
+                                    <th>ID Number</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Password</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Profile Editor View -->
+            <section id="view-profile-editor" class="admin-view">
+                <header class="header">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: var(--text-secondary); margin-bottom: 5px;" onclick="switchView('users', document.querySelectorAll('.nav-item')[1])">
+                            <i class="ri-arrow-left-line"></i> Back to Directory
+                        </div>
+                        <h1>Edit User Profile</h1>
+                    </div>
+                </header>
+
+                <div class="profile-editor-container">
+                    <div class="profile-card">
+                        <div class="avatar" id="editAvatarIcon"><i class="ri-user-line"></i></div>
+                        <h2 id="editNameDisplay" style="margin-bottom: 5px;">User Name</h2>
+                        <p id="editRoleDisplay" style="color: var(--text-secondary); margin-bottom: 1rem;">Role</p>
+                        <span id="editStatusBadge" class="grid-badge badge-present">Active</span>
+                        
+                        <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid var(--border-color); text-align: left;">
+                            <h4 style="margin-bottom: 10px; color: var(--text-secondary); font-size: 0.85rem; text-transform: uppercase;">Quick Actions</h4>
+                            <div id="facultyActions" style="display: none;">
+                                <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 20px; cursor: pointer;">
+                                    <input type="checkbox" id="editIsClassInCharge" onchange="toggleInCharge(this.checked)" style="width: 20px; height: 20px;">
+                                    <span>Designate as <strong>Class In-Charge</strong></span>
+                                </label>
+                                <p style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 10px;">(Grants permission to mark Morning/Noon attendance)</p>
+                            </div>
+                            <button class="btn-secondary" onclick="forcePasswordReset()" style="width: 100%; margin-bottom: 10px; justify-content: flex-start;"><i class="ri-lock-password-line"></i> Force Password Reset</button>
+                            <button class="btn-secondary" onclick="updateCurrentStatus('Suspended')" style="width: 100%; margin-bottom: 10px; justify-content: flex-start; color: var(--warning); border-color: rgba(245, 158, 11, 0.3);"><i class="ri-forbid-line"></i> Suspend Account</button>
+                            <button class="btn-secondary" onclick="deleteCurrentUser()" style="width: 100%; justify-content: flex-start; color: var(--danger); border-color: rgba(239, 68, 68, 0.3);"><i class="ri-delete-bin-line"></i> Delete Account</button>
+                        </div>
+                    </div>
+
+                    <div class="profile-details">
+                        <form id="profileEditForm" onsubmit="handleProfileSave(event)">
+                            <h3 style="margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">Primary Details</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label>Full Name</label>
+                                    <input type="text" id="editFullName" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;" required>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label>ID Number (Reg/Emp)</label>
+                                    <input type="text" id="editIdNumber" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;" readonly>
+                                    <small style="color: var(--text-secondary); font-size: 0.75rem;">ID cannot be changed.</small>
+                                </div>
+                            </div>
+
+                             <div class="form-row">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label>Role</label>
+                                    <select id="editRole" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                                        <option value="Student">Student</option>
+                                        <option value="Faculty">Faculty</option>
+                                        <option value="HOD">HOD</option>
+                                        <option value="Principal">Principal</option>
+                                        <option value="Office">Office Staff</option>
+                                        <option value="Admin">Admin</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <h3 style="margin: 2rem 0 1.5rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1rem;">System Settings</h3>
+                            
+                            <div class="form-row">
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label>Account Status</label>
+                                    <select id="editStatus" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                                        <option value="Active">Active</option>
+                                        <option value="Suspended">Suspended</option>
+                                        <option value="Pending">Pending Verification</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin-bottom: 0;">
+                                    <label>Assigned Department</label>
+                                    <select id="editDept" style="width: 100%; padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;">
+                                        <option value="BA ANIMATION & GRAPHIC DESIGN">BA Animation & Graphic Design</option>
+                                        <option value="BA ANIMATION & VISUAL EFFECTS">BA Animation & Visual Effects</option>
+                                        <option value="BA MULTIMEDIA">BA Multimedia</option>
+                                        <option value="BA INTERIOR DESIGN">BA Interior Design</option>
+                                        <option value="BSC FASHION">BSC Fashion</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: flex-end;">
+                                <button type="button" class="btn-secondary" onclick="switchView('users', document.querySelectorAll('.nav-item')[1])">Cancel</button>
+                                <button type="submit" class="btn-primary">Save Changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Subject Management View -->
+            <section id="view-subjects" class="admin-view">
+                <header class="header">
+                    <div>
+                        <h1>Global Subject Registry</h1>
+                        <p class="subtitle" style="color: var(--text-secondary);">Manage the official curriculum catalog and faculty assignments</p>
+                    </div>
+                    <button class="btn-primary" onclick="showAddSubjectModal()">
+                        <i class="ri-add-line"></i> Add New Subject
+                    </button>
+                </header>
+                
+                <div class="card">
+                     <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Subject Name</th>
+                                <th>Course/Dept</th>
+                                <th>Assigned Faculty</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjectTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Departments & Classes View -->
+            <section id="view-classes" class="admin-view">
+                <header class="header">
+                    <div>
+                        <h1>Departments & Class Registry</h1>
+                        <p class="subtitle" style="color: var(--text-secondary);">Organize academic structure and assign Class In-Charge faculty</p>
+                    </div>
+                    <button class="btn-primary" onclick="showAddClassModal()">
+                        <i class="ri-add-box-line"></i> Add New Class
+                    </button>
+                </header>
+                
+                <div class="card">
+                     <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Class Name</th>
+                                <th>Department</th>
+                                <th>Class In-Charge</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="classTableBody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Attendance Management View -->
+            <section id="view-attendance" class="admin-view">
+                <header class="header">
+                    <div>
+                        <h1>Global Attendance Records</h1>
+                        <p class="subtitle" style="color: var(--text-secondary);">Review and manage attendance for all classes</p>
+                    </div>
+                </header>
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div style="display: flex; gap: 1rem; align-items: flex-end;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Select Date</label>
+                            <input type="date" id="adminAttendanceDate" style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;" onchange="loadAdminAttendance()">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Class</label>
+                            <select id="adminAttendanceClass" style="padding: 10px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;" onchange="loadAdminAttendance()">
+                                <option value="">All Classes</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0; flex: 1;">
+                            <label>Search Student (ID/Name)</label>
+                            <div style="position: relative; display: flex; align-items: center;">
+                                <i class="ri-search-line" style="position: absolute; left: 12px; color: var(--text-secondary);"></i>
+                                <input type="text" id="adminAttendanceSearch" placeholder="Enter ID or Name..." style="width: 100%; padding: 10px 10px 10px 35px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px;" oninput="loadAdminAttendance()">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adminAttendanceTableBody">
+                                <!-- Populated by JS -->
+                                <tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-secondary);">Select a date and class to view records.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- System Modifications View -->
+            <section id="view-modifications" class="admin-view">
+                 <header class="header">
+                    <div>
+                        <h1>System Modifications & Labs</h1>
+                        <p class="subtitle" style="color: var(--text-secondary);">Experimental tools and database maintenance</p>
+                    </div>
+                </header>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+                    <!-- Database Tools -->
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <i class="ri-database-2-line" style="font-size: 1.5rem; color: var(--accent-primary);"></i>
+                            <h3 style="margin: 0;">Maintenance Tools</h3>
+                        </div>
+                        <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.5rem;">Perform deep cleaning of system data and reset tables.</p>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <button class="btn-secondary" onclick="resetAttendanceData()" style="justify-content: flex-start; color: var(--warning);"><i class="ri-history-line"></i> Purge Attendance History</button>
+                            <button class="btn-secondary" onclick="clearSystemLogs()" style="justify-content: flex-start;"><i class="ri-delete-bin-7-line"></i> Clear Audit Logs</button>
+                            <button class="btn-secondary" onclick="resetAllData()" style="justify-content: flex-start; color: var(--danger);"><i class="ri-refresh-line"></i> Factory Reset System</button>
+                        </div>
+                    </div>
+
+                    <!-- UI Customization -->
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <i class="ri-palette-line" style="font-size: 1.5rem; color: var(--success);"></i>
+                            <h3 style="margin: 0;">UI Customization (Labs)</h3>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="margin: 0;">Glassmorphic Intensity</h4>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Adjust card blur effects</p>
+                                </div>
+                                <input type="range" min="0" max="20" value="10" oninput="updateBlur(this.value)">
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="margin: 0;">Accent Color</h4>
+                                    <p style="font-size: 0.8rem; color: var(--text-secondary);">Change system primary color</p>
+                                </div>
+                                <input type="color" value="#ff6b00" onchange="updateBrandColor(this.value)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Communication -->
+                    <div class="card">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                            <i class="ri-megaphone-line" style="font-size: 1.5rem; color: var(--danger);"></i>
+                            <h3 style="margin: 0;">Global Announcement</h3>
+                        </div>
+                        <div class="form-group">
+                            <label>Banner Text</label>
+                            <textarea id="announcementText" placeholder="Attention: Exams start tomorrow..." style="width: 100%; min-height: 80px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; border-radius: 6px; padding: 10px; margin-bottom: 15px;"></textarea>
+                            <button class="btn-primary" style="width: 100%;" onclick="publishAnnouncement()">Publish Banner</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Profile View -->
+            <section id="view-profile" class="admin-view">
+                <header class="top-nav">
+                    <h2 class="nav-title">Admin Profile</h2>
+                    <div class="profile-menu">
+                        <div class="profile-info">
+                            <div class="user-details">
+                                <span class="name">Super Admin</span>
+                                <span class="reg">Root Access</span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="dashboard-content">
+                    <h1 class="page-title">My Profile</h1>
+                    <div class="card p-4">
+                        <p><strong>Name:</strong> Super Admin</p>
+                        <p><strong>Role:</strong> Administrator</p>
+                        <p><strong>Email:</strong> admin@classtrack.edu</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Settings View -->
+            <section id="view-settings" class="admin-view">
+                <header class="top-nav">
+                    <h2 class="nav-title">System Settings</h2>
+                    <div class="profile-menu">
+                        <div class="profile-info">
+                            <div class="user-details">
+                                <span class="name">Super Admin</span>
+                                <span class="reg">Root Access</span>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <div class="dashboard-content">
+                    <h1 class="page-title">Personal Settings</h1>
+                    <div class="card p-4">
+                        <p>Change Password, Notification Preferences, and Security Settings will appear here.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <footer class="site-footer">
+        &copy; <span id="currentYear"></span> ClassTrack. All rights reserved.
+    </footer>
+
+    <!-- Subject Modal -->
+    <div id="subjectModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="card" style="width: 100%; max-width: 500px; padding: 2rem; background: var(--bg-card); border: 1px solid var(--border-color);">
+            <h2 id="modalTitle" style="margin-bottom: 20px;">Add New Subject</h2>
+            <div class="form-group" style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Subject Name</label>
+                <input type="text" id="newSubName" placeholder="e.g. Adv 3D Modeling" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Department</label>
+                <select id="newSubDept" style="background: #1e293b; border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 25px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Assign Faculty</label>
+                <select id="newSubFaculty" style="background: #1e293b; border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+                    <option value="">Select Faculty</option>
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="saveNewSubject()" style="flex: 1;">Save Subject</button>
+                <button class="btn-secondary" onclick="document.getElementById('subjectModal').style.display='none'" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Class Modal -->
+    <div id="classModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="card" style="width: 100%; max-width: 500px; padding: 2rem; background: var(--bg-card); border: 1px solid var(--border-color);">
+            <h2 id="classModalTitle" style="margin-bottom: 20px;">Add New Class</h2>
+            <div class="form-group" style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Class Name</label>
+                <input type="text" id="newClassName" placeholder="e.g. Year 3 - Sec A" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Department</label>
+                <select id="newClassDept" style="background: #1e293b; border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 25px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Assign Class In-Charge</label>
+                <select id="newClassFaculty" style="background: #1e293b; border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+                    <option value="">Select Faculty</option>
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="saveClass()" style="flex: 1;">Save Class</button>
+                <button class="btn-secondary" onclick="document.getElementById('classModal').style.display='none'" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div class="card" style="width: 100%; max-width: 500px; padding: 2rem; background: var(--bg-card); border: 1px solid var(--border-color);">
+            <h2 id="userModalTitle" style="margin-bottom: 20px;">Add New User</h2>
+            <div class="form-group" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Full Name</label>
+                <input type="text" id="newUserName" placeholder="e.g. John Doe" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Register / Employee ID</label>
+                <input type="text" id="newUserId" placeholder="e.g. 20CS01" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Email</label>
+                <input type="email" id="newUserEmail" placeholder="e.g. john@classtrack.edu" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Password</label>
+                <input type="text" id="newUserPassword" value="password123" style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Role</label>
+                <select id="newUserRole" style="background: #1e293b; border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+                    <option value="Student">Student</option>
+                    <option value="Faculty">Faculty</option>
+                    <option value="HOD">HOD</option>
+                    <option value="Principal">Principal</option>
+                    <option value="Office">Office Staff</option>
+                    <option value="Admin">Admin</option>
+                </select>
+            </div>
+            <div class="form-group" style="margin-bottom: 25px; display: flex; flex-direction: column; gap: 5px;">
+                <label style="font-size: 0.9rem; color: var(--text-secondary);">Department</label>
+                <select id="newUserDept" style="background: #1e293b; border: 1px solid var(--border-color); color: white; padding: 0.8rem; border-radius: var(--radius-sm);">
+                    <!-- Populated by JS -->
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-primary" onclick="saveNewUser()" style="flex: 1;">Save User</button>
+                <button class="btn-secondary" onclick="document.getElementById('userModal').style.display='none'" style="flex: 1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data Layer ---
+        const DEPARTMENTS = [
+            "BA ANIMATION & GRAPHIC DESIGN",
+            "BA ANIMATION & VISUAL EFFECTS",
+            "BA MULTIMEDIA",
+            "BA INTERIOR DESIGN",
+            "BSC FASHION"
+        ];
+
+        // --- Data Layer ---
+        // Note: DEFAULT_USERS and initialization is handled by app.js correctly.
+        let users = JSON.parse(localStorage.getItem('admin_users') || '[]');
+        if (users.length === 0 && typeof DEFAULT_USERS !== 'undefined') {
+            users = [...DEFAULT_USERS];
+        }
+
+        let subjects = JSON.parse(localStorage.getItem('admin_subjects')) || [
+            { name: 'Digital Illustration', dept: 'BA ANIMATION & GRAPHIC DESIGN', facultyId: 'EMP1042' },
+            { name: '3D Modeling', dept: 'BA ANIMATION & VISUAL EFFECTS', facultyId: 'EMP1042' },
+            { name: 'Typography', dept: 'BA MULTIMEDIA', facultyId: 'EMP1099' }
+        ];
+        let classes = JSON.parse(localStorage.getItem('admin_classes')) || [
+            { name: 'Animation - Yr 1', dept: 'BA ANIMATION & GRAPHIC DESIGN', inChargeId: 'EMP1042' },
+            { name: 'Multimedia - Yr 2', dept: 'BA MULTIMEDIA', inChargeId: 'EMP1099' }
+        ];
+
+        // Ensure every user has a password (for legacy/signup)
+        users = users.map(u => ({ ...u, password: u.password || 'password123', email: u.email || (u.id + '@classtrack.edu') }));
+
+        let currentRoleTab = 'Student';
+
+        let logs = [
+            { time: '2026-03-17 10:14:22', type: 'INFO', msg: 'System initialized.' }
+        ];
+
+        // --- Core Functions ---
+        
+        function saveData() {
+            localStorage.setItem('admin_users', JSON.stringify(users));
+            localStorage.setItem('admin_subjects', JSON.stringify(subjects));
+            localStorage.setItem('admin_classes', JSON.stringify(classes));
+            updateStats();
+        }
+
+        function updateStats() {
+            const studentCount = users.filter(u => u.role === 'Student').length;
+            const facultyCount = users.filter(u => u.role === 'Faculty').length;
+            const suspendedCount = users.filter(u => u.status === 'Suspended').length;
+
+            document.getElementById('stat-total-students').innerText = studentCount.toLocaleString();
+            document.getElementById('stat-total-faculty').innerText = facultyCount.toLocaleString();
+            document.getElementById('stat-active-subjects').innerText = subjects.length.toLocaleString();
+            document.getElementById('stat-total-classes').innerText = classes.length.toLocaleString();
+            document.getElementById('stat-suspended').innerText = suspendedCount.toLocaleString();
+        }
+
+        function switchUserTab(role) {
+            currentRoleTab = role;
+            document.querySelectorAll('.btn-tab').forEach(btn => {
+                btn.classList.remove('active');
+                btn.style.background = 'transparent';
+                btn.style.color = 'var(--text-secondary)';
+            });
+            const activeBtn = document.getElementById('userTab-' + role);
+            activeBtn.classList.add('active');
+            activeBtn.style.background = 'var(--accent-primary)';
+            activeBtn.style.color = 'white';
+            handleSearch();
+        }
+
+        function renderUserTable(filteredUsers = users) {
+            const tbody = document.getElementById('userTableBody');
+            if(!tbody) return;
+
+            // Apply the current tab filter
+            const tabUsers = filteredUsers.filter(u => u.role === currentRoleTab);
+
+            if(tabUsers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 3rem;">No users found in this category.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = tabUsers.map(user => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div class="avatar" style="width: 32px; height: 32px; font-size: 1rem; ${user.role === 'Faculty' ? 'background: var(--accent-primary);' : ''}">
+                                <i class="${user.role === 'Faculty' ? 'ri-graduation-cap-line' : 'ri-user-line'}"></i>
+                            </div> 
+                            <span>${user.name} ${user.inCharge ? '<i class="ri-shield-star-fill" style="color: var(--warning); margin-left: 5px;" title="Class In-Charge"></i>' : ''}</span>
+                        </div>
+                    </td>
+                    <td>${user.dept}</td>
+                    <td><strong>${user.id}</strong></td>
+                    <td style="font-size: 0.85rem; color: var(--text-secondary);">${user.email}</td>
+                    <td><span class="grid-badge ${user.status === 'Active' ? 'badge-present' : user.status === 'Suspended' ? 'badge-absent' : 'badge-not-entered'}" style="padding: 4px 8px;">${user.status}</span></td>
+                    <td style="font-size: 0.8rem; color: var(--text-muted);">${user.password}</td>
+                    <td class="action-btns">
+                        <i class="ri-edit-box-line" title="Edit Profile" onclick="openProfileEditor('${user.id}')"></i>
+                        <i class="ri-delete-bin-line btn-danger" title="Delete Account" onclick="deleteUser('${user.id}')"></i>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderSubjectTable() {
+            const tbody = document.getElementById('subjectTableBody');
+            if(!tbody) return;
+
+            tbody.innerHTML = subjects.map((sub, index) => {
+                const faculty = users.find(u => u.id === sub.facultyId);
+                return `
+                    <tr>
+                        <td><strong>${sub.name}</strong></td>
+                        <td>${sub.dept}</td>
+                        <td>${faculty ? faculty.name : '<span style="color: var(--danger)">Not Assigned</span>'}</td>
+                        <td class="action-btns">
+                            <i class="ri-edit-line" title="Edit Subject" onclick="openSubjectEditor(${index})"></i> 
+                            <i class="ri-delete-bin-line btn-danger" title="Delete Subject" onclick="deleteSubject(${index})"></i>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('logs-container');
+            if(!container) return;
+            container.innerHTML = logs.map(log => {
+                let color = 'var(--text-secondary)';
+                if(log.type === 'SUCCESS') color = 'var(--success)';
+                if(log.type === 'WARN') color = 'var(--warning)';
+                if(log.type === 'ERROR') color = 'var(--danger)';
+                return `<div style="margin-bottom: 5px;"><span style="color: var(--text-secondary)">[${log.time}]</span> <span style="color: ${color}">[${log.type}]</span> ${log.msg}</div>`;
+            }).join('');
+        }
+
+        function addLog(type, msg) {
+            const time = new Date().toISOString().replace('T', ' ').split('.')[0];
+            logs.unshift({ time, type, msg });
+            renderLogs();
+            renderActivity();
+        }
+
+        function renderActivity() {
+            const list = document.getElementById('activity-list');
+            if(!list) return;
+            list.innerHTML = logs.slice(0, 3).map(log => `
+                <li style="padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 15px;">
+                    <i class="${log.type === 'SUCCESS' ? 'ri-checkbox-circle-line' : 'ri-information-line'}" style="color: var(--accent-primary); background: rgba(59, 130, 246, 0.1); padding: 8px; border-radius: 50%;"></i>
+                    <div>
+                        <p style="margin: 0; font-weight: 500;">${log.msg}</p>
+                        <p style="margin: 0; font-size: 0.8rem; color: var(--text-secondary);">${log.time}</p>
+                    </div>
+                </li>
+            `).join('');
+        }
+
+        // --- Interaction Handlers ---
+
+        function handleSearch() {
+            const query = document.getElementById('userSearchInput').value.toLowerCase();
+            const dept = document.getElementById('deptFilter').value;
+
+            const filtered = users.filter(user => {
+                const matchesSearch = user.name.toLowerCase().includes(query) || user.id.toLowerCase().includes(query);
+                const matchesDept = dept === 'all' || user.dept === dept;
+                return matchesSearch && matchesDept;
+            });
+
+            renderUserTable(filtered);
+        }
+
+        function switchView(viewId, clickedElement) {
+            if(clickedElement) {
+                document.querySelectorAll('.nav-links li').forEach(el => el.classList.remove('active'));
+                clickedElement.parentElement.classList.add('active');
+            }
+            document.querySelectorAll('.admin-view').forEach(el => el.classList.remove('active'));
+            document.getElementById('view-' + viewId).classList.add('active');
+            
+            if(viewId === 'subjects') renderSubjectTable();
+            if(viewId === 'users') renderUserTable();
+        }
+
+        function openProfileEditor(userId) {
+            const user = users.find(u => u.id === userId);
+            if(!user) return;
+
+            document.getElementById('editFullName').value = user.name;
+            document.getElementById('editIdNumber').value = user.id;
+            document.getElementById('editRole').value = user.role;
+            document.getElementById('editStatus').value = user.status;
+            document.getElementById('editDept').value = user.dept;
+            
+            document.getElementById('editNameDisplay').innerText = user.name;
+            document.getElementById('editRoleDisplay').innerText = user.role + " · " + user.id;
+            
+            const badge = document.getElementById('editStatusBadge');
+            badge.innerText = user.status;
+            badge.className = 'grid-badge ' + (user.status === 'Active' ? 'badge-present' : 'badge-absent');
+
+            // Show/Hide Faculty actions
+            document.getElementById('facultyActions').style.display = user.role === 'Faculty' ? 'block' : 'none';
+            document.getElementById('editIsClassInCharge').checked = !!user.inCharge;
+
+            switchView('profile-editor');
+        }
+
+        function handleProfileSave(e) {
+            e.preventDefault();
+            const id = document.getElementById('editIdNumber').value;
+            const index = users.findIndex(u => u.id === id);
+            
+            if(index !== -1) {
+                users[index].name = document.getElementById('editFullName').value;
+                users[index].role = document.getElementById('editRole').value;
+                users[index].status = document.getElementById('editStatus').value;
+                users[index].dept = document.getElementById('editDept').value;
+                
+                addLog('INFO', `Updated profile for ${users[index].name} (${id})`);
+                saveData();
+                renderUserTable();
+                switchView('users', document.querySelectorAll('.nav-item')[1]);
+            }
+        }
+
+        function toggleInCharge(val) {
+            const id = document.getElementById('editIdNumber').value;
+            const user = users.find(u => u.id === id);
+            if(user) {
+                user.inCharge = val;
+                addLog('INFO', `${user.name} designation changed: In-Charge = ${val}`);
+                saveData();
+            }
+        }
+
+        function deleteUser(userId) {
+            if(confirm(`Are you sure you want to delete user ${userId}?`)) {
+                const user = users.find(u => u.id === userId);
+                users = users.filter(u => u.id !== userId);
+                addLog('WARN', `Deleted user account: ${user ? user.name : userId}`);
+                saveData();
+                renderUserTable();
+            }
+        }
+
+        function clearAllUsers() {
+            if(confirm("CRITICAL: This will clear EVERY user from the system. Proceed?")) {
+                users = [];
+                addLog('ERROR', 'System wiped: All users cleared.');
+                saveData();
+                renderUserTable();
+            }
+        }
+
+        function resetUsersToDefault() {
+            if(confirm("Reset users to default sample data?")) {
+                users = [...DEFAULT_USERS];
+                addLog('INFO', 'System reset to default users.');
+                saveData();
+                renderUserTable();
+            }
+        }
+
+        let currentSubjectIndex = -1;
+
+        function showAddSubjectModal() {
+            currentSubjectIndex = -1;
+            document.getElementById('modalTitle').innerText = "Add New Subject";
+            document.getElementById('newSubName').value = "";
+            const modal = document.getElementById('subjectModal');
+            document.getElementById('newSubDept').innerHTML = DEPARTMENTS.map(d => `<option value="${d}">${d}</option>`).join('');
+            
+            const faculty = users.filter(u => u.role === 'Faculty');
+            document.getElementById('newSubFaculty').innerHTML = `<option value="">-- No Faculty --</option>` + 
+                faculty.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        function openSubjectEditor(index) {
+            currentSubjectIndex = index;
+            const sub = subjects[index];
+            document.getElementById('modalTitle').innerText = "Edit Subject";
+            document.getElementById('newSubName').value = sub.name;
+            
+            const modal = document.getElementById('subjectModal');
+            document.getElementById('newSubDept').innerHTML = DEPARTMENTS.map(d => `
+                <option value="${d}" ${d === sub.dept ? 'selected' : ''}>${d}</option>
+            `).join('');
+            
+            const faculty = users.filter(u => u.role === 'Faculty');
+            document.getElementById('newSubFaculty').innerHTML = `<option value="">-- No Faculty --</option>` + 
+                faculty.map(f => `
+                    <option value="${f.id}" ${f.id === sub.facultyId ? 'selected' : ''}>${f.name}</option>
+                `).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        function saveNewSubject() {
+            const name = document.getElementById('newSubName').value;
+            const dept = document.getElementById('newSubDept').value;
+            const facultyId = document.getElementById('newSubFaculty').value;
+
+            if(!name) return alert("Please enter subject name");
+
+            if (currentSubjectIndex > -1) {
+                subjects[currentSubjectIndex] = { name, dept, facultyId };
+                addLog('SUCCESS', `Updated subject: ${name}`);
+            } else {
+                subjects.push({ name, dept, facultyId });
+                addLog('SUCCESS', `Added subject: ${name} (Dept: ${dept})`);
+            }
+            
+            saveData();
+            renderSubjectTable();
+            document.getElementById('subjectModal').style.display = 'none';
+        }
+
+        function deleteSubject(index) {
+            if(confirm(`Delete subject "${subjects[index].name}"?`)) {
+                addLog('WARN', `Deleted subject: ${subjects[index].name}`);
+                subjects.splice(index, 1);
+                saveData();
+                renderSubjectTable();
+            }
+        }
+
+        function showAddUserModal() {
+            document.getElementById('newUserName').value = "";
+            document.getElementById('newUserId').value = "";
+            document.getElementById('newUserEmail').value = "";
+            document.getElementById('newUserPassword').value = "password123";
+            
+            const deptSelect = document.getElementById('newUserDept');
+            deptSelect.innerHTML = DEPARTMENTS.map(d => `<option value="${d}">${d}</option>`).join('');
+            
+            document.getElementById('userModalTitle').innerText = `Add New ${currentRoleTab}`;
+            document.getElementById('userModal').style.display = 'flex';
+        }
+
+        function saveNewUser() {
+            const name = document.getElementById('newUserName').value.trim();
+            const id = document.getElementById('newUserId').value.trim();
+            const email = document.getElementById('newUserEmail').value.trim();
+            const password = document.getElementById('newUserPassword').value;
+            const dept = document.getElementById('newUserDept').value;
+            const role = currentRoleTab;
+
+            if(!name || !id) return alert("Please fill in Name and ID");
+
+            if(users.find(u => u.id === id)) {
+                return alert("User ID already exists!");
+            }
+
+            users.push({ 
+                name, 
+                id, 
+                email: email || (id + '@classtrack.edu'), 
+                password: password || 'password123',
+                role: role, 
+                status: 'Active', 
+                dept: dept,
+                inCharge: false
+            });
+
+            addLog('SUCCESS', `Added ${role}: ${name} (${id})`);
+            saveData();
+            renderUserTable();
+            document.getElementById('userModal').style.display = 'none';
+        }
+
+        // Global functions for profile card buttons
+        window.updateCurrentStatus = function(status) {
+            const id = document.getElementById('editIdNumber').value;
+            const user = users.find(u => u.id === id);
+            if(user) {
+                user.status = status;
+                document.getElementById('editStatus').value = status;
+                const badge = document.getElementById('editStatusBadge');
+                badge.innerText = status;
+                badge.className = 'grid-badge ' + (status === 'Active' ? 'badge-present' : 'badge-absent');
+                saveData();
+                renderUserTable();
+            }
+        };
+
+        window.deleteCurrentUser = function() {
+            const id = document.getElementById('editIdNumber').value;
+            deleteUser(id);
+            switchView('users', document.querySelectorAll('.nav-item')[1]);
+        };
+
+        window.forcePasswordReset = function() {
+            const id = document.getElementById('editIdNumber').value;
+            const newPassword = prompt("Enter new password for this user:", "password123");
+            if (newPassword) {
+                const user = users.find(u => u.id === id);
+                if (user) {
+                    user.password = newPassword;
+                    addLog('SUCCESS', `Password for ${user.name} (${id}) has been reset.`);
+                    saveData();
+                    alert(`Password for ${user.name} has been reset successfully.`);
+                }
+            }
+        };
+
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // Populate Department dropdown in Profile Editor
+            const deptSelect = document.getElementById('editDept');
+            if(deptSelect) {
+                deptSelect.innerHTML = DEPARTMENTS.map(d => `<option value="${d}">${d}</option>`).join('');
+            }
+
+            updateStats();
+            renderUserTable();
+            renderSubjectTable();
+            renderClassTable();
+            renderLogs();
+            renderActivity();
+        });
+
+        function renderClassTable() {
+            const tbody = document.getElementById('classTableBody');
+            if(!tbody) return;
+
+            if(classes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-secondary); padding: 3rem;">No classes found. Add one to get started.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = classes.map((cls, index) => {
+                const faculty = users.find(u => u.id === cls.inChargeId);
+                return `
+                    <tr>
+                        <td><strong>${cls.name}</strong></td>
+                        <td>${cls.dept}</td>
+                        <td>${faculty ? faculty.name : '<span style="color: var(--danger)">Not Assigned</span>'}</td>
+                        <td class="action-btns">
+                            <i class="ri-edit-line" title="Edit Class" onclick="openClassEditor(${index})"></i> 
+                            <i class="ri-delete-bin-line btn-danger" title="Delete Class" onclick="deleteClass(${index})"></i>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        let currentClassIndex = -1;
+
+        function showAddClassModal() {
+            currentClassIndex = -1;
+            document.getElementById('classModalTitle').innerText = "Add New Class";
+            document.getElementById('newClassName').value = "";
+            const modal = document.getElementById('classModal');
+            document.getElementById('newClassDept').innerHTML = DEPARTMENTS.map(d => `<option value="${d}">${d}</option>`).join('');
+            
+            const faculty = users.filter(u => u.role === 'Faculty');
+            document.getElementById('newClassFaculty').innerHTML = `<option value="">-- No In-Charge --</option>` + 
+                faculty.map(f => `<option value="${f.id}">${f.name}</option>`).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        function openClassEditor(index) {
+            currentClassIndex = index;
+            const cls = classes[index];
+            document.getElementById('classModalTitle').innerText = "Edit Class";
+            document.getElementById('newClassName').value = cls.name;
+            
+            const modal = document.getElementById('classModal');
+            document.getElementById('newClassDept').innerHTML = DEPARTMENTS.map(d => `
+                <option value="${d}" ${d === cls.dept ? 'selected' : ''}>${d}</option>
+            `).join('');
+            
+            const faculty = users.filter(u => u.role === 'Faculty');
+            document.getElementById('newClassFaculty').innerHTML = `<option value="">-- No In-Charge --</option>` + 
+                faculty.map(f => `
+                    <option value="${f.id}" ${f.id === cls.inChargeId ? 'selected' : ''}>${f.name}</option>
+                `).join('');
+            
+            modal.style.display = 'flex';
+        }
+
+        function saveClass() {
+            const name = document.getElementById('newClassName').value.trim();
+            const dept = document.getElementById('newClassDept').value;
+            const facultyId = document.getElementById('newClassFaculty').value;
+
+            if(!name) return alert("Please enter class name");
+
+            // Update user inCharge status for the new faculty
+            if (facultyId) {
+                const facultyIndex = users.findIndex(u => u.id === facultyId);
+                if (facultyIndex !== -1) {
+                    users[facultyIndex].inCharge = true;
+                }
+            }
+            
+            // If we are replacing an existing faculty, we should check if they are in charge of anything else
+            // For simplicity in this mock, we just add; real systems would re-validate all assignments
+
+            if (currentClassIndex > -1) {
+                classes[currentClassIndex] = { name, dept, inChargeId: facultyId };
+                addLog('SUCCESS', `Updated class: ${name}`);
+            } else {
+                classes.push({ name, dept, inChargeId: facultyId });
+                addLog('SUCCESS', `Added class: ${name}`);
+            }
+            
+            saveData();
+            renderClassTable();
+            document.getElementById('classModal').style.display = 'none';
+        }
+
+        function deleteClass(index) {
+            if(confirm(`Delete class "${classes[index].name}"?`)) {
+                const name = classes[index].name;
+                addLog('WARN', `Deleted class: ${name}`);
+                classes.splice(index, 1);
+                saveData();
+                renderClassTable();
+            }
+        }
+        function updateBlur(val) {
+            document.documentElement.style.setProperty('--card-blur', val + 'px');
+            localStorage.setItem('nexus_blur', val);
+        }
+
+        function updateBrandColor(val) {
+            document.documentElement.style.setProperty('--accent-primary', val);
+            localStorage.setItem('nexus_brand_color', val);
+        }
+
+        function publishAnnouncement() {
+            const text = document.getElementById('announcementText').value;
+            localStorage.setItem('nexus_announcement', text);
+            addLog('SUCCESS', 'Global announcement published.');
+            alert('Banner updated! It will appear for all users on next reload.');
+        }
+
+        function clearSystemLogs() {
+            if(confirm("Empty all system logs?")) {
+                logs = [{ time: new Date().toISOString().replace('T', ' ').split('.')[0], type: 'INFO', msg: 'Logs cleared by Admin' }];
+                renderLogs();
+                addLog('SUCCESS', 'System logs cleared');
+            }
+        }
+
+        function resetAttendanceData() {
+            if(confirm("WARNING: This will delete ALL attendance records permanently!")) {
+                localStorage.setItem('attendance_records', JSON.stringify({}));
+                addLog('ERROR', 'ALL ATTENDANCE RECORDS DELETED');
+                alert("Attendance data purged.");
+            }
+        }
+
+        // Attendance Management Functions
+        function populateAdminAttendanceFilters() {
+            const classSel = document.getElementById('adminAttendanceClass');
+            classSel.innerHTML = '<option value="">All Classes</option>' + 
+                classes.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            
+            // Set today's date
+            document.getElementById('adminAttendanceDate').value = new Date().toISOString().split('T')[0];
+        }
+
+        function loadAdminAttendance() {
+            const date = document.getElementById('adminAttendanceDate').value;
+            const cls = document.getElementById('adminAttendanceClass').value;
+            const searchTerm = (document.getElementById('adminAttendanceSearch')?.value || '').toLowerCase();
+            const tbody = document.getElementById('adminAttendanceTableBody');
+            
+            const records = JSON.parse(localStorage.getItem('attendance_records') || '{}');
+            const dayRecords = records[date] || {};
+            
+            let html = '';
+            let found = false;
+
+            for (const className in dayRecords) {
+                if (cls && className !== cls) continue;
+                
+                let classHtml = '';
+                let classRecordsFound = false;
+
+                for (const period in dayRecords[className]) {
+                    const data = dayRecords[className][period].data;
+                    const sub = dayRecords[className][period].subject;
+                    
+                    let periodHtml = `<tr><td colspan="4" style="background: rgba(255,107,0,0.05); color: var(--accent-primary); font-weight: 600;">Class: ${className} | Period: ${period} | ${sub}</td></tr>`;
+                    let studentRecordsFound = false;
+
+                    for (const studentId in data) {
+                        const student = users.find(u => u.id === studentId) || { name: 'Unknown Student' };
+                        
+                        if (searchTerm && !studentId.toLowerCase().includes(searchTerm) && !student.name.toLowerCase().includes(searchTerm)) {
+                            continue;
+                        }
+
+                        const status = data[studentId];
+                        periodHtml += `
+                            <tr>
+                                <td>${studentId}</td>
+                                <td>${student.name}</td>
+                                <td><span class="grid-badge ${status === 'p' ? 'badge-present' : 'badge-absent'}">${status === 'p' ? 'Present' : 'Absent'}</span></td>
+                                <td>
+                                    <button class="btn-secondary" style="padding: 2px 8px; font-size: 0.75rem;" onclick="toggleAdminAttendance('${date}', '${className}', '${period}', '${studentId}')">Toggle Status</button>
+                                </td>
+                            </tr>
+                        `;
+                        studentRecordsFound = true;
+                    }
+
+                    if (studentRecordsFound) {
+                        classHtml += periodHtml;
+                        classRecordsFound = true;
+                    }
+                }
+
+                if (classRecordsFound) {
+                    html += classHtml;
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 2rem; color: var(--text-secondary);">No records found for this selection.</td></tr>`;
+            } else {
+                tbody.innerHTML = html;
+            }
+        }
+
+        function toggleAdminAttendance(date, className, period, studentId) {
+            const records = JSON.parse(localStorage.getItem('attendance_records') || '{}');
+            const current = records[date][className][period].data[studentId];
+            records[date][className][period].data[studentId] = current === 'p' ? 'a' : 'p';
+            localStorage.setItem('attendance_records', JSON.stringify(records));
+            addLog('INFO', `Admin updated attendance for ${studentId} on ${date}`);
+            loadAdminAttendance();
+        }
+
+        function renderCollegeGalaxy() {
+            const container = document.getElementById('collegeGalaxyHeatmap');
+            if(!container) return;
+            // Generate 100 mock nodes representing different classes/days
+            let html = '';
+            for(let i=0; i<100; i++) {
+                const isHigh = Math.random() > 0.3;
+                html += `<div class="node ${isHigh ? 'p' : 'a'}" title="Node ${i}: ${isHigh ? 'Synced' : 'Critical'}" style="width: 12px; height: 12px;"></div>`;
+            }
+            container.innerHTML = html;
+        }
+
+        // Initialize view-specific components
+        document.addEventListener('DOMContentLoaded', () => {
+            populateAdminAttendanceFilters();
+            renderCollegeGalaxy();
+            
+            // Apply saved UI settings
+            const savedBlur = localStorage.getItem('nexus_blur');
+            if (savedBlur) document.documentElement.style.setProperty('--card-blur', savedBlur + 'px');
+            
+            const savedColor = localStorage.getItem('nexus_brand_color');
+            if (savedColor) document.documentElement.style.setProperty('--accent-primary', savedColor);
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>

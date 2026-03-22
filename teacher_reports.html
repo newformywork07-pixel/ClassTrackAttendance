@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Teacher Reports</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <aside class="sidebar">
+        <div class="logo">
+            <i class="ri-graduation-cap-fill"></i>
+            <span>ClassTrack<strong>Teacher</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="teacher.html"><i class="ri-time-line"></i> Hourly Attendance</a></li>
+            <li><a href="teacher_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily Attendance</a></li>
+            <li class="active"><a href="teacher_reports.html"><i class="ri-file-chart-line"></i> Reports</a></li>
+            <li><a href="teacher_classes.html"><i class="ri-group-line"></i> My Classes</a></li>
+            <li><a href="teacher_profile.html"><i class="ri-user-settings-line"></i> Profile</a></li>
+            <li><a href="teacher_settings.html"><i class="ri-settings-line"></i> Settings</a></li>
+        </ul>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i> Logout</a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <header class="top-nav">
+            <h2 class="nav-title">Attendance Insights & Reports</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Faculty Member</span>
+                        <span id="userDept" class="reg">Department Analyst</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+            <div class="action-header">
+                <h1 class="page-title">Attendance Reports</h1>
+                <button class="btn-primary" onclick="alert('Exporting CSV...')"><i class="ri-file-excel-line"></i> Export Full Report</button>
+            </div>
+            
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-bar-chart-box-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Avg. Attendance</h3>
+                        <p class="stat-value">82%</p>
+                        <p class="stat-subtitle">Across all classes</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon" style="color: var(--danger); background: var(--danger-bg);"><i class="ri-error-warning-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Below 75%</h3>
+                        <p class="stat-value">12</p>
+                        <p class="stat-subtitle">Students at risk</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="ri-book-mark-line"></i></div>
+                    <div class="stat-info">
+                        <h3>Total Sessions</h3>
+                        <p class="stat-value">48</p>
+                        <p class="stat-subtitle">Conducted this month</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="attendance-section">
+                <h2>Low Attendance Defaulters</h2>
+                <div class="table-container" style="margin-top: 16px;">
+                    <table class="attendance-table">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Name</th>
+                                <th>Class</th>
+                                <th>Percentage</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>20CS05</td>
+                                <td>Evan Wright</td>
+                                <td>CS-3A</td>
+                                <td style="color: var(--danger); font-weight: bold;">65%</td>
+                                <td><button class="btn-secondary" style="padding: 6px 12px;">Send Warning</button></td>
+                            </tr>
+                            <tr>
+                                <td>20CS12</td>
+                                <td>Rachel Green</td>
+                                <td>CS-3B</td>
+                                <td style="color: var(--danger); font-weight: bold;">68%</td>
+                                <td><button class="btn-secondary" style="padding: 6px 12px;">Send Warning</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="site-footer">
+        &copy; 2026 ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+</body>
+</html>

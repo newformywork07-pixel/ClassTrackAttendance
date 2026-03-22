@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClassTrack | Daily Base Attendance</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+    <nav class="sidebar">
+        <div class="logo">
+            <span>Faculty<strong>Hub</strong></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="teacher.html"><i class="ri-time-line"></i> Hourly</a></li>
+            <li class="active"><a href="teacher_daily_attendance.html"><i class="ri-calendar-event-line"></i> Daily</a></li>
+            <li><a href="teacher_reports.html"><i class="ri-file-chart-line"></i> Reports</a></li>
+            <li><a href="teacher_classes.html"><i class="ri-group-line"></i> Classes</a></li>
+        </ul>
+        <div class="profile-menu">
+            <div class="profile-info">
+                <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=000" alt="Profile" class="avatar">
+                <div class="user-details">
+                    <span id="userName" class="name">Faculty Member</span>
+                    <span id="userDept" class="reg">Department</span>
+                </div>
+            </div>
+        </div>
+        <div class="logout-wrapper">
+            <a href="index.html" class="logout-btn"><i class="ri-logout-circle-line"></i></a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="top-nav">
+             <h2 class="nav-title">Daily Attendance Management</h2>
+            <div class="profile-menu">
+                <div class="profile-info">
+                    <img id="userAvatar" src="https://ui-avatars.com/api/?name=User&background=ff6b00&color=fff" alt="Profile" class="avatar">
+                    <div class="user-details">
+                        <span id="userName" class="name">Faculty Member</span>
+                        <span id="userDept" class="reg">Department</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <section class="dashboard-content">
+            <div class="action-header">
+                <h1 class="page-title">Take Daily Attendance</h1>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+            
+
+            <div class="filter-card">
+                <div class="filter-group">
+                    <label>Select Your Assigned Class</label>
+                    <div class="select-wrapper">
+                        <i class="ri-group-fill"></i>
+                        <select id="classSelector">
+                            <option value="" disabled selected>Choose a class</option>
+                            <option value="CS-3A">B.Tech CS - Year 3 - Sec A</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="filter-group">
+                    <label>Select Session Node</label>
+                    <div class="select-wrapper">
+                        <i class="ri-sun-line"></i>
+                        <select id="sessionSelector">
+                            <option value="" disabled selected>Choose session</option>
+                            <option value="morning">Morning Session (Alpha)</option>
+                            <option value="noon">Noon Session (Omega)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" id="loadRosterBtn" onclick="loadClassRoster()">
+                    LOAD REGISTER
+                </button>
+            </div>
+
+            <div class="attendance-marking-section" id="rosterSection" style="display: none;">
+                <div class="marking-controls">
+                    <div class="mark-all-controls">
+                        <button class="btn-outline present" onclick="markAll('present')">Mark All Present</button>
+                        <button class="btn-outline absent" onclick="markAll('absent')">Mark All Absent</button>
+                    </div>
+                    <div class="summary-counts">
+                        <span class="badge present">Present: <span id="countPresent">0</span></span>
+                        <span class="badge absent">Absent: <span id="countAbsent">0</span></span>
+                    </div>
+                </div>
+
+                <div class="student-roster">
+                    <table class="attendance-table roster-table">
+                        <thead>
+                            <tr>
+                                <th>Roll No</th>
+                                <th>Student Name</th>
+                                <th>Action (P / A)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rosterTbody">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="action-footer">
+                    <button class="btn-primary save-btn" id="saveAttendanceBtn" onclick="saveAttendance()">
+                        <span class="btn-text">Save Attendance</span>
+                        <i class="ri-save-line"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Success Modal -->
+            <div class="modal" id="successModal">
+                <div class="modal-content">
+                    <div class="success-icon">
+                        <i class="ri-check-line"></i>
+                    </div>
+                    <h2>Daily Attendance Saved!</h2>
+                    <p>The daily session attendance has been successfully recorded.</p>
+                    <button class="btn-primary" onclick="closeModal()">Continue</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="site-footer">
+        &copy; 2026 ClassTrack. All rights reserved.
+    </footer>
+    <script src="app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('nexus_user') || '{}');
+            if (user.name) {
+                document.getElementById('userName').innerText = user.name;
+                document.getElementById('userDept').innerText = user.dept || 'Faculty';
+                document.getElementById('userAvatar').src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=ff6b00&color=fff`;
+            }
+            
+            // Core permission check from app.js
+            if (typeof checkClassInCharge === 'function') {
+                checkClassInCharge();
+            }
+        });
+
+        document.getElementById('currentDate').innerText = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        
+        // Override the loadClassRoster to check for session instead of subject
+        function loadClassRoster() {
+            const classSel = document.getElementById('classSelector').value;
+            const sessSel = document.getElementById('sessionSelector').value;
+
+            if(!classSel || !sessSel) {
+                alert('Please select both Class and Session');
+                return;
+            }
+
+            const btn = document.getElementById('loadRosterBtn');
+            btn.innerHTML = 'Loading...';
+
+            setTimeout(() => {
+                document.getElementById('rosterSection').style.display = 'block';
+                btn.innerHTML = 'Load Register';
+                if (typeof renderRoster === 'function') renderRoster(); 
+                if (typeof updateCounts === 'function') updateCounts();
+            }, 600);
+        }
+
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('active');
+            document.getElementById('rosterSection').style.display = 'none';
+            if (typeof currentAttendance !== 'undefined') currentAttendance = {};
+            document.getElementById('classSelector').value = '';
+            document.getElementById('sessionSelector').value = '';
+        }
+        
+    </script>
+</body>
+</html>
