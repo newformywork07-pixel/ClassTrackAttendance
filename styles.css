@@ -1062,16 +1062,91 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+
+
+/* Menu Toggle Button Hidden by Default */
+.menu-toggle {
+    display: none;
+}
+
+/* --- Mobile Responsiveness --- */
+@media (max-width: 992px) {
+    .sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+        transition: transform var(--transition-smooth);
+    }
+    .sidebar.active {
+        transform: translateX(0);
+        box-shadow: 20px 0 50px rgba(0,0,0,0.5);
+    }
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    .top-nav {
+        padding: 0 16px;
+    }
+    .search-bar {
+        display: none;
+    }
+    .menu-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-sm);
+        color: var(--text-primary);
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+}
+
+
 @media (max-width: 768px) {
-    .dashboard-body { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; padding: 16px; border-right: none; border-bottom: 1px solid var(--border-color); flex-direction: row; align-items: center; justify-content: space-between; }
-    .sidebar .logo { margin-bottom: 0; padding: 0; }
-    .nav-links { display: none; }
-    .logout-wrapper { padding: 0; }
-    .top-nav { padding: 16px; }
-    .search-bar { display: none; }
-    .dashboard-content { padding: 16px; }
-    .filter-card { flex-direction: column; align-items: stretch; }
+    .dashboard-content {
+        padding: 20px 16px;
+    }
+    .page-title {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+    .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .filter-card {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .action-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .profile-info .user-details {
+        display: none;
+    }
+    .login-card {
+        padding: 2rem 1.5rem;
+    }
+    .btn-primary {
+        padding: 10px 16px;
+    }
+    
+    /* Table improvements */
+    .table-container {
+        margin: 0 -16px;
+        padding: 0 16px;
+        width: calc(100% + 32px);
+    }
+    .attendance-table th, .attendance-table td {
+        padding: 12px 8px;
+        font-size: 0.9rem;
+    }
 }
 
 /* --- Print Styles for PDF Generation --- */

@@ -621,9 +621,65 @@ function updateHeaderInfo() {
     }
 }
 
+
+// --- Mobile Responsiveness Logic ---
+
+window.toggleMobileMenu = function() {
+    const sidebar = document.querySelector('.sidebar');
+    if (sidebar) {
+        sidebar.classList.toggle('active');
+        
+        // Add overlay if active
+        let overlay = document.querySelector('.sidebar-overlay');
+        if (sidebar.classList.contains('active')) {
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.className = 'sidebar-overlay';
+                overlay.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999; backdrop-filter: blur(4px);';
+                overlay.onclick = toggleMobileMenu;
+                document.body.appendChild(overlay);
+            }
+        } else if (overlay) {
+            overlay.remove();
+        }
+    }
+};
+
+function injectMobileMenu() {
+    const topNavs = document.querySelectorAll('.top-nav');
+    const sidebar = document.querySelector('.sidebar');
+    
+    if (sidebar && topNavs.length > 0 && !document.querySelector('.menu-toggle')) {
+        topNavs.forEach(nav => {
+            const toggle = document.createElement('div');
+            toggle.className = 'menu-toggle';
+            toggle.innerHTML = '<i class="ri-menu-line"></i>';
+            toggle.style.marginRight = '12px';
+            toggle.onclick = (e) => {
+                e.stopPropagation();
+                toggleMobileMenu();
+            };
+            nav.prepend(toggle);
+        });
+        
+        // Also close sidebar on link click (for mobile)
+        const links = sidebar.querySelectorAll('a');
+        links.forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth <= 992) {
+                    sidebar.classList.remove('active');
+                    const overlay = document.querySelector('.sidebar-overlay');
+                    if (overlay) overlay.remove();
+                }
+            });
+        });
+    }
+}
+
 // Initialize dynamic features on load
 document.addEventListener('DOMContentLoaded', () => {
     updateHeaderInfo();
+    injectMobileMenu();
     
     // Session validation: If user is logged in, sync with master admin_users list
     const sessionUser = JSON.parse(localStorage.getItem('nexus_user') || '{}');
